@@ -28,15 +28,19 @@ body {
     padding: 1rem;
 }
 
-.mt-otsikko {
-    font-family: 'Orbitron', sans-serif;
-}
-
 .paivakirja {
     flex: 1;
     padding: 1rem;
     font-family: 'Oxanium', sans-serif;
     color: #A2C2A1;
+}
+
+.mt-otsikko,
+.tilanne,
+.alueet,
+.radio,
+.pk-otsikko {
+    font-family: 'Orbitron', sans-serif;
 }
 
 @media (min-width: 768px) {
