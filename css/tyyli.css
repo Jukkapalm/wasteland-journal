@@ -12,3 +12,38 @@ body {
     background-attachment: fixed;
     min-height: 100vh;
 }
+
+.container {
+    display: flex;
+    flex-direction: column;
+    width: 90vw;
+    margin: 0 auto;
+    background-color: rgba(43, 43, 43, 0.7);
+}
+
+.status-panel {
+    flex: 1;
+    color: #39FF14;
+    font-family: 'Oxanium', sans-serif;
+    padding: 1rem;
+}
+
+.mt-otsikko {
+    font-family: 'Orbitron', sans-serif;
+}
+
+.paivakirja {
+    flex: 1;
+    padding: 1rem;
+    font-family: 'Oxanium', sans-serif;
+    color: #A2C2A1;
+}
+
+@media (min-width: 768px) {
+    .container {
+        flex-direction: row;
+    }
+    body {
+        overflow: hidden;
+    }
+}
