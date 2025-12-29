@@ -31,12 +31,12 @@ function updateRadio() {
         { viesti: "Jos joku lukee tämän, pysykää poissa kaupungista" },
         { viesti: "Varoitus! Eteläinen sektori saastunut" },
         { viesti: "Pysykää turvassa. Älkää jääkö yksin ulos" },
-        { viesti: "Älkää juoko käsittelemätöntä vettä, vedenpuhdistamot saastuneet" },
+        { viesti: "Juokaa vain käsiteltyä vettä, vedenpuhdistamot saastuneet" },
         { viesti: "Ryöstäjiä liikkeellä, pysykää piilossa" },
         { viesti: "Varoitus! Läntinen sektori saastunut" },
         { viesti: "Kaupunki vihamielinen, välttäkää liikkumista keskustassa" },
-        { viesti: "Hälytys: Kaupunki täynnä väijyviä ryhmiä, liikkuminen vaarallista" },
-        { viesti: "Vältä liikkumista eteläisessä sektorissa, taloissa sortumavaara" },
+        { viesti: "Hälytys: Kaupungilla väijyviä ryhmiä, varokaa" },
+        { viesti: "Vältä liikkumista etelä sektorilla, taloissa sortumavaara" },
         { viesti: "Itäisellä sektorilla liikkuminen turvallista"},
         { viesti: "Pohjoisella sektorilla turvallista liikkua" }
     ];
@@ -56,7 +56,7 @@ function updateRadio() {
         "Jos joku lukee tämän, pysykää poissa kaupungista",
         "Pysykää turvassa. Älkää jääkö yksin ulos",
         "Ryöstäjiä liikkeellä, pysykää piilossa",
-        "Vältä liikkumista eteläisessä sektorissa, taloissa sortumavaara"
+        "Vältä liikkumista etelä sektorilla, taloissa sortumavaara"
     ].includes(valittu.viesti)) {
         vari = "#FFD700";
     } else {
@@ -68,10 +68,30 @@ function updateRadio() {
 
 }
 
+function updateSateily() {
+    const sateily = document.getElementById("radiation-level");
+
+    const tasot = [
+        { taso: "matala", warning: ""},
+        { taso: "kohonnut", warning: " (ei suositella ulkona liikkumista!)" },
+        { taso: "korkea", warning: " (säteily vaarallisella tasolla, älä liiku ulkona!)" }
+    ];
+
+    const randomIndex = Math.floor(Math.random() * tasot.length);
+    const valitse = tasot[randomIndex];
+
+    sateily.textContent = `☢️ Säteilyn taso: ${valitse.taso}${valitse.warning}`;
+
+    if (valitse.taso === "matala") sateily.style.color = "#39FF14";
+    else if (valitse.taso === "kohonnut") sateily.style.color = "#FFD700";
+    else sateily.style.color = "#FF0000"
+}
+
 // Ladataan sivu ja käynnistetään funktiot
 window.onload = () => {
     updatePaivat();
     updateRadio();
+    updateSateily();
 
     setInterval(updateRadio, 10000);
 }
