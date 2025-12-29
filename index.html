@@ -4,9 +4,38 @@
         <title>Wasteland journal</title>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400..900&display=swap" rel="stylesheet">
         <link rel="stylesheet" href="css/tyyli.css">
     </head>
     <body>
         
+        <div class="intro-kontti">
+            <p id="intro-txt"></p>
+        </div>
+
+        <div class="kontti">
+            <div class="status-paneeli">
+                <h1 class="mt-otsikko">Maailman tila</h1>
+                <h2>Tilanne:</h2>
+                <p id="days-since"></p>
+                <p id="radiation-level"></p>
+                <p>🔋 Virta: 37% (generaattori päällä)</p>
+                <p>🌡️ Lämpötila bunkkerissa: +12&deg;C</p>
+                <p>❄️ Lämpötila ulkona: -7&deg;C</p>
+                <h2>Alueet:</h2>
+                <p>[✅] Läntinen sektori - ei saasteita</p>
+                <p>[✅] Bunkkeri A - turvallinen</p>
+                <p>[❗] Kaupunki - vihamielinen</p>
+                <h2>Radioyhteys:</h2>
+                <p>📻 Tuntematon signaali vastaanotettu...</p>
+            </div>
+
+            <div class="paivakirja">
+                <h2 class="pk-otsikko">Päiväkirja</h2>
+                <div class="merkinnat"></div>
+            </div>
+        </div>
     </body>
 </html>
