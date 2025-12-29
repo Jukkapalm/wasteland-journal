@@ -25,6 +25,7 @@ let vari = "#39FF14";
 function updateRadio() {
     const radio = document.getElementById("radio-signal");
 
+    // Luodaan lista radio viesteistä
     const viestit = [
         { viesti: "Tuntematon signaali vastaanotettu" },
         { viesti: "Jos joku lukee tämän, pysykää poissa kaupungista" },
@@ -40,6 +41,7 @@ function updateRadio() {
         { viesti: "Pohjoisella sektorilla turvallista liikkua" }
     ];
 
+    // Valitaan viestit listalta satunnainen viesti
     const randomIndex = Math.floor(Math.random() * viestit.length);
     const valittu = viestit[randomIndex];
 
