@@ -28,6 +28,19 @@ body {
     padding: 1rem;
 }
 
+.sateily-danger {
+    color: #FF0000;
+    text-shadow: 0 0 12px #FF0000, 0 0 24px #FF0000;
+    animation: blink 1.2s step-start infinite;
+    font-style: bold;
+}
+
+@keyframes blink {
+    0% { opacity: 1; }
+    50% { opacity: 0; }
+    100% { opacity: 1; }
+}
+
 #radio-signal::after {
     content: "";
     animation: dots 1.5s steps(4, end) infinite;

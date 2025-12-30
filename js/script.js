@@ -75,7 +75,7 @@ function updateSateily() {
     const tasot = [
         { taso: "matala", warning: ""},
         { taso: "kohonnut", warning: " (ei suositella ulkona liikkumista!)" },
-        { taso: "korkea", warning: " (säteily vaarallisella tasolla, älä liiku ulkona!)" }
+        { taso: "korkea", warning: " (säteily vaarallisella tasolla, pysy sisällä!)" }
     ];
 
     const randomIndex = Math.floor(Math.random() * tasot.length);
@@ -83,12 +83,36 @@ function updateSateily() {
 
     sateily.textContent = `☢️ Säteilyn taso: ${valitse.taso}${valitse.warning}`;
 
-    if (valitse.taso === "matala") sateily.style.color = "#39FF14";
-    else if (valitse.taso === "kohonnut") sateily.style.color = "#FFD700";
-    else sateily.style.color = "#FF0000"
+    // Oletuksena sateilyn tason vilkkuminen pois, mutta jos korkea niin vilkkuu punaisena
+    sateily.classList.remove("sateily-danger");
+
+    if (valitse.taso === "matala") {
+        sateily.style.color = "#39FF14";
+    } else if (valitse.taso === "kohonnut") {
+        sateily.style.color = "#FFD700";
+    } else {
+        sateily.style.color = "#FF0000"
+        sateily.classList.add("sateily-danger")
+    }
 }
 
-// Kuukausikohtaiset lämpötilat
+// Satunnainen sisälämpötila
+let sisalampotila;
+
+function updateSisalampo() {
+    const ulkolampotila = parseFloat(document.getElementById("ulko-lampotila").textContent.match(/-?\d+(\.\d+)?/)[0]);
+    sisalampotila = Math.random() * 50 - 28;
+
+    if (sisalampotila < ulkolampotila) {
+        sisalampotila = ulkolampotila;
+    }
+    paivitaSisalampo();
+}
+function paivitaSisalampo() {
+    document.getElementById("sisa-lampotila").textContent =  `🌡️ Lämpötila bunkkerissa: ${sisalampotila.toFixed(1)}°C`;
+}
+
+// Kuukausikohtaiset ulkolämpötilat lämpötilat
 const kkLampotilaKa = {
     0: { min: -30, max: -5 },
     1: { min: -25, max: 0 },
@@ -119,7 +143,24 @@ function ulkoLampotila() {
 function updateUlkoLampotila() {
     const ulkolampotila = document.getElementById("ulko-lampotila");
     const temp = ulkoLampotila();
-    ulkolampotila.textContent = `❄️ Lämpötila ulkona: ${temp} °C`;
+
+    // Lisätään jos pakkasta niin keli on joko ❄️ tai ☀️, ja jos plussalla niin 💧 tai ☀️
+    let saaSymboli = "";
+    if (temp < 0) {
+        saaSymboli = Math.random() < 0.5 ? "❄️" : "☀️";
+    } else {
+        saaSymboli = Math.random() < 0.5 ? "💧" : "☀️";
+    }
+
+    // Lisätään myös tekstin väri riippuen lämpöasteista
+    let color;
+    if (temp < 0) color = "#00BFFF";
+    else if (temp <= 20) color = "#39FF14";
+    else if (temp <= 30) color = "#FFD700";
+    else color = "#FF0000"
+
+    ulkolampotila.textContent = `${saaSymboli} Lämpötila ulkona: ${temp} °C`;
+    ulkolampotila.style.color = color;
 }
 
 // Ladataan sivu ja käynnistetään funktiot
@@ -128,6 +169,7 @@ window.onload = () => {
     updateRadio();
     updateSateily();
     updateUlkoLampotila();
+    updateSisalampo();
 
 
     setInterval(updateRadio, 10000);
