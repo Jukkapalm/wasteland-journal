@@ -34,9 +34,9 @@ function updateRadio() {
         { viesti: "Juokaa vain käsiteltyä vettä, vedenpuhdistamot saastuneet" },
         { viesti: "Ryöstäjiä liikkeellä, pysykää piilossa" },
         { viesti: "Varoitus! Läntinen sektori saastunut" },
-        { viesti: "Kaupunki vihamielinen, välttäkää liikkumista keskustassa" },
+        { viesti: "Kaupunki vihamielinen, älkää liikkuko keskustassa" },
         { viesti: "Hälytys: Kaupungilla väijyviä ryhmiä, varokaa" },
-        { viesti: "Vältä liikkumista etelä sektorilla, taloissa sortumavaara" },
+        { viesti: "Vältä liikkumista etelä sektorilla, taloja sortunut" },
         { viesti: "Itäisellä sektorilla liikkuminen turvallista"},
         { viesti: "Pohjoisella sektorilla turvallista liikkua" }
     ];
@@ -56,11 +56,11 @@ function updateRadio() {
         "Jos joku lukee tämän, pysykää poissa kaupungista",
         "Pysykää turvassa. Älkää jääkö yksin ulos",
         "Ryöstäjiä liikkeellä, pysykää piilossa",
-        "Vältä liikkumista etelä sektorilla, taloissa sortumavaara"
+        "Vältä liikkumista etelä sektorilla, taloja sortunut"
     ].includes(valittu.viesti)) {
         vari = "#FFD700";
     } else {
-        vari = "#FF3B3B";
+        vari = "#FF3B3B"
     }
 
     radio.style.color = vari;
@@ -68,6 +68,7 @@ function updateRadio() {
 
 }
 
+// Säteilyyn satunnaisia arvoja
 function updateSateily() {
     const sateily = document.getElementById("radiation-level");
 
@@ -87,11 +88,47 @@ function updateSateily() {
     else sateily.style.color = "#FF0000"
 }
 
+// Kuukausikohtaiset lämpötilat
+const kkLampotilaKa = {
+    0: { min: -30, max: -5 },
+    1: { min: -25, max: 0 },
+    2: { min: -15, max: 5 },
+    3: { min: -10, max: 10 },
+    4: { min: -5, max: 15 },
+    5: { min: 10, max: 30 },
+    6: { min: 15, max: 35 },
+    7: { min: 10, max: 25 },
+    8: { min: 5, max: 20 },
+    9: { min: 0, max: 15 },
+    10: { min: -10, max: 10 },
+    11: { min: -25, max: -5 }
+};
+
+// Haetaan nykyinen kuukausi
+function ulkoLampotila() {
+    const now = new Date();
+    const kuukausi = now.getMonth();
+    const range = kkLampotilaKa[kuukausi];
+
+    // Arvotaan lämpötila kuukauden min-max väliltä
+    const lampotila = Math.random() * (range.max - range.min) + range.min;
+    return lampotila.toFixed(1);
+}
+
+// Päivitetään UI:hin ulkolämpötila
+function updateUlkoLampotila() {
+    const ulkolampotila = document.getElementById("ulko-lampotila");
+    const temp = ulkoLampotila();
+    ulkolampotila.textContent = `❄️ Lämpötila ulkona: ${temp} °C`;
+}
+
 // Ladataan sivu ja käynnistetään funktiot
 window.onload = () => {
     updatePaivat();
     updateRadio();
     updateSateily();
+    updateUlkoLampotila();
+
 
     setInterval(updateRadio, 10000);
 }
