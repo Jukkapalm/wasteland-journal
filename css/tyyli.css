@@ -42,6 +42,20 @@ body {
     100% { opacity: 1; }
 }
 
+.jaatymisVaroitus {
+    animation: jaatymis-varoitus 1.2s step-start infinite;
+}
+
+.jaatymisVaroitus.jaatynyt {
+    text-shadow: 0 0 12px #FF0000, 0 0 24px #FF0000;
+}
+
+@keyframes jaatymis-varoitus {
+    0% { opacity: 1; }
+    50% { opacity: 0; }
+    100% { opacity: 1; }
+}
+
 #radio-signal::after {
     content: "";
     animation: dots 1.5s steps(4, end) infinite;
@@ -73,9 +87,15 @@ body {
 }
 
 .lokiMerkinta {
-    background-color: #4A4A4A;
+    background-color: rgba(74, 74, 74, 0.7);
     padding: 0.5rem;
     margin-bottom: 0.5rem;
+}
+
+.paiva,
+.kello {
+    display: block;
+    font-weight: bold;
 }
 
 .mt-otsikko,

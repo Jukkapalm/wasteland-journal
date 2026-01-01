@@ -111,11 +111,43 @@ let sisalampotila;
 
 // Arvotaan sisälämpötila
 function arvoSisalampo() {
-    sisalampotila = Math.random() * 50 - 25;
+    const min = -30;
+    const max = 35;
+    sisalampotila = Math.random() * (max - min) + min;
+    sisalampotila = Math.max(-30, Math.min(35,sisalampotila));
 }
 
 function paivitaSisalampo() {
-    document.getElementById("sisa-lampotila").textContent =  `🌡️ Lämpötila bunkkerissa: ${sisalampotila.toFixed(1)}°C`;
+    const tempInside = document.getElementById("sisa-lampotila");
+    
+    let jaatymisvaara = "";
+    let jarjestelmaJaatynyt = "";
+
+    if (sisalampotila < -5) {
+        jarjestelmaJaatynyt = "🧊 Järjestelmä jäässä! 🧊";
+        tempInside.classList.add("jaatymisVaroitus");
+        tempInside.classList.add("jaatynyt");
+    } else {
+        if (sisalampotila <= 5) {
+            jaatymisvaara = " ⚠️ Jäätymisvaara!";
+            tempInside.classList.add("jaatymisVaroitus");
+        } else {
+            tempInside.classList.remove("jaatymisVaroitus");
+            tempInside.classList.remove("jaatynyt");
+        }
+    }
+
+    tempInside.textContent =  `🌡️ Lämpötila bunkkerissa: ${sisalampotila.toFixed(1)}°C${jaatymisvaara}${jarjestelmaJaatynyt}`;
+
+    let sisalampovarit;
+    if (sisalampotila < -5) sisalampovarit = "#00BFFF";
+    else if (sisalampotila <= 5) sisalampovarit = "#00BFFF";
+    else if (sisalampotila <= 15) sisalampovarit = "#39FF14";
+    else if (sisalampotila <= 25) sisalampovarit = "#FFD700";
+    else sisalampovarit = "#FF0000";
+
+    tempInside.style.color = sisalampovarit;
+
 }
 
 function updateSisalampo() {
@@ -126,7 +158,8 @@ function updateSisalampo() {
     // Jos sisälämpötila enemmän kuin ulkona niin tippuu hitaasti kohti ulkolämpötilaa
     if (sisalampotila > ulkolampo) {
         sisalampotila -= 0.5;
-        if (sisalampotila < ulkolampo) sisalampotila = ulkolampo;
+    } else {
+        sisalampotila = ulkolampo
     }
 
     paivitaSisalampo();
@@ -184,7 +217,7 @@ function updateUlkoLampotila() {
 }
 
 const lokiMerkinnat = [
-    { day: 0, time: "2.38", text: "Joku liikkui sektorilla" }
+    { day: 0, time: "22.40", text: "Päivä jolloin kaikki muuttui, se hetki jota tutkijat ovat varoitelleet jo pidemmän aikaa, ja poliitikot vain naureskelivat. Hallituksen kokeilut menivät pahasti pieleen. Ihmiset syrjäytyvät, ruoka ja puhdas vesi ovat muuttuneet valuutaksi, joita vain harvoilla on, suuri määrä ihmisiä jää ilman ravintoa ja puhdasta vettä. Naapurit jotka vielä eilen tervehtivät ja hymyilivät, katsovat nykyään pahasti, ja tutkivat silmillään olisiko minulla jotain mitä heiltä puuttuu. Vielä en tiedä mitä tästä kaikesta tulee, mutta sen tiedän jo nyt, keneenkään ei voi luottaa. Jokainen on omillaan..." }
 ];
 
 function paivakirjaMerkinnat() {
@@ -207,10 +240,12 @@ window.onload = () => {
     naytaKello();
     updateRadio();
     updateSateily();
-    updateUlkoLampotila();
-    arvoSisalampo();
-    paivitaSisalampo();
     paivakirjaMerkinnat();
+    updateUlkoLampotila();
+
+    arvoSisalampo();
+
+    paivitaSisalampo();
 
     setInterval(updatePaivat, 1000);
     setInterval(naytaKello, 1000);
