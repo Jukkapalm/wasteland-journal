@@ -17,7 +17,18 @@ function updatePaivat() {
     const paivatEro = Math.floor(aikaEro / (1000 * 60 * 60 * 24));
 
     // Päivittää tekstin HTML elementtiin
-    paivat.textContent = `🕒 ${paivatEro} päivää katastrofista`;
+    paivat.textContent = ` 📆 ${paivatEro} päivää katastrofista`;
+}
+
+function naytaKello() {
+    const kello = document.getElementById("kello");
+    const kellonyt = new Date();
+
+    let tunnit = kellonyt.getHours().toString().padStart(2, '0');
+    let minuutit = kellonyt.getMinutes().toString().padStart(2, '0');
+    let sekunnit = kellonyt.getSeconds().toString().padStart(2, '0');
+
+    kello.textContent = ` 🕒 Kellonaika: ${tunnit}:${minuutit}:${sekunnit}`;
 }
 
 let vari = "#39FF14";
@@ -96,20 +107,29 @@ function updateSateily() {
     }
 }
 
-// Satunnainen sisälämpötila
 let sisalampotila;
 
-function updateSisalampo() {
-    const ulkolampotila = parseFloat(document.getElementById("ulko-lampotila").textContent.match(/-?\d+(\.\d+)?/)[0]);
-    sisalampotila = Math.random() * 50 - 28;
-
-    if (sisalampotila < ulkolampotila) {
-        sisalampotila = ulkolampotila;
-    }
-    paivitaSisalampo();
+// Arvotaan sisälämpötila
+function arvoSisalampo() {
+    sisalampotila = Math.random() * 50 - 25;
 }
+
 function paivitaSisalampo() {
     document.getElementById("sisa-lampotila").textContent =  `🌡️ Lämpötila bunkkerissa: ${sisalampotila.toFixed(1)}°C`;
+}
+
+function updateSisalampo() {
+    const ulkolampo = parseFloat(
+        document.getElementById("ulko-lampotila"). textContent.match(/-?\d+(\.\d+)?/)[0]
+    );
+
+    // Jos sisälämpötila enemmän kuin ulkona niin tippuu hitaasti kohti ulkolämpötilaa
+    if (sisalampotila > ulkolampo) {
+        sisalampotila -= 0.5;
+        if (sisalampotila < ulkolampo) sisalampotila = ulkolampo;
+    }
+
+    paivitaSisalampo();
 }
 
 // Kuukausikohtaiset ulkolämpötilat lämpötilat
@@ -163,14 +183,37 @@ function updateUlkoLampotila() {
     ulkolampotila.style.color = color;
 }
 
+const lokiMerkinnat = [
+    { day: 0, time: "2.38", text: "Joku liikkui sektorilla" }
+];
+
+function paivakirjaMerkinnat() {
+    const loki = document.getElementById("loki");
+    lokiMerkinnat.forEach(merkinta => {
+        const div = document.createElement("div");
+        div.classList.add("lokiMerkinta");
+        div.innerHTML = `<span class="paiva">Päivä: ${merkinta.day}</span><br>
+                            <span class="kello">Kello: ${merkinta.time}</span><br>
+                            <span class="teksti">${merkinta.text}</span>`;
+        loki.appendChild(div);
+
+        loki.scrollTop = loki.scrollHeight;
+    });
+}
+
 // Ladataan sivu ja käynnistetään funktiot
 window.onload = () => {
     updatePaivat();
+    naytaKello();
     updateRadio();
     updateSateily();
     updateUlkoLampotila();
-    updateSisalampo();
+    arvoSisalampo();
+    paivitaSisalampo();
+    paivakirjaMerkinnat();
 
-
+    setInterval(updatePaivat, 1000);
+    setInterval(naytaKello, 1000);
     setInterval(updateRadio, 10000);
+    setInterval(updateSisalampo, 1000);
 }
