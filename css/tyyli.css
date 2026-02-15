@@ -1,0 +1,338 @@
+/* Sivun perusasetukset */
+html, body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    background-color: #050505;
+}
+
+
+/* Intro / headerin perusasetukset */
+.intro-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+    position: fixed;
+    z-index: 1;
+    opacity: 1;
+    transition: opacity 1s ease-out;
+}
+
+
+/* Intron taustakuvan asetukset */
+.intro-background-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url("../images/taustakuva.jpg");
+    background-size: cover;
+    background-position: center;
+}
+
+
+/* Intron tekstin container */
+.intro-text-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 2;
+}
+
+
+/* Intro tekstin asetukset */
+.intro-text {
+    color: #33FF00;
+    font-family: "Pacifico", cursive;
+    font-size: clamp(2rem, 6vw, 7rem);
+    padding-right: 10px;
+    clip-path: inset(0 100% 0 0);
+    animation: revealText 3s linear forwards;
+    text-shadow: 0 0 5px #33FF00;
+}
+
+
+/* Main-content perusasetukset */
+.main-content {
+    position: relative;
+    inset: 0;
+    opacity: 0;
+    display: flex;
+    transition: opacity 1s ease-in;
+    z-index: 0;
+    min-height: 100vh;
+}
+
+
+/* Päänäkymän yläpalkki ja post-it lapun asetukset */
+.top-bar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 40px;
+    background: rgba(20, 20, 20, 1);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    z-index: 100;
+}
+
+
+/* Post-it lappu */
+.sticky-note {
+    position: absolute;
+    top: 30px;
+    right: 7%;
+    width: 225px;
+    height: 85px;
+    padding: 20px;
+    background: #FDF29D;
+    display: block !important;
+    transform: rotate(2deg);
+    box-shadow: 5px 5px 15px rgba(0,0,0,0.4);
+    color: #333;
+    font-size: 0.7rem;
+}
+
+
+/* Post-it lapun teippi */
+.sticky-note::before {
+    content: "";
+    position: absolute;
+    top: -20%;
+    left: 50%;
+    transform: translateX(-50%) rotate(-2deg);
+    width: 50%;
+    height: 30px;
+    background: rgba(255, 255, 255, 0.4);
+    backdrop-filter: blur(1px);
+}
+
+/* Post-it lapun teksti */
+#postit-teksti {
+    color: #333;
+    white-space: pre-wrap;
+    font-family: "Special Elite", system-ui;
+    opacity: 0.7;
+    margin-bottom: 0;
+}
+#signature {
+    color: #FF0000;
+    font-family: "Permanent Marker", cursive;
+    font-size: 1rem;
+    font-weight: 900;
+    opacity: 0.7;
+}
+
+
+/* Terminaalin otsikko  */
+.bunker-terminal {
+    text-shadow: 0 0 5px #33FF00, 0 0 10px #33FF00;
+}
+
+
+/* Koko hallintapaneelin perusasetukset */
+#dashboard {
+    color: #33FF00;
+    margin-top: 8rem;
+    font-family: "Courier New", sans-serif;
+}
+
+
+/* Overlay joka on hallintapaneelin päällä, tekee vanhan näytön tunnelman */
+.crt-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: repeating-linear-gradient(
+        0deg,
+        rgba(0, 0, 0, 0.15),
+        rgba(0, 0, 0, 0.15) 1px,
+        transparent 1px,
+        transparent 2px
+    );
+    pointer-events: none; /* Päästää klikkaukset läpi */
+    z-index: 90;
+}
+
+
+/* Määritellään koko paneelin fontti */
+.terminal {
+    font-family: "Courier New", sans-serif;
+}
+
+
+/* Status monitorin ja päiväkirjan column asetukset */
+.status-monitor,
+.paivakirja {
+    border: 2px solid #33FF00;
+    background-color: rgba(0, 20, 0, 0.7);
+    box-shadow: 0 0 15px rgba(51, 255, 0, 0.2);
+}
+
+
+/* Statusmonitorin ja piväkirjan otsikot */
+.status-title,
+.paivakirja-title {
+    border-bottom: 2px solid #33FF00;
+    padding-bottom: 10px;
+    margin-bottom: 20px;
+    letter-spacing: 2px;
+    text-shadow: 0 0 5px #33FF00, 0 0 10px #33FF00;
+}
+
+
+/* Väliviivat paneelissa */
+.terminal-hr {
+    border-color: #33FF00;
+    opacity: 0.5;
+}
+
+
+/* Progress-bar perusväri ja asetukset */
+.bg-radiation-green {
+    background-color: #33FF00 !important;
+    color: #000;
+}
+.terminal-progress {
+    height: 20px;
+    background-color: transparent;
+    border: 1px solid #33FF00;
+    border-radius: 0;
+}
+
+
+/* Status indikaattorit päällä / pois */
+.status-indicator.on {
+    color: #33FF00;
+    font-weight: bold;
+    animation: blink 2s infinite;
+}
+.status-indicator.off {
+    color: #AAA;
+}
+
+
+/* Intron fade-out ja päänäkymän fade-in */
+.intro-fade-out {
+    opacity: 0 !important;
+    transition: opacity 1s ease-out;
+}
+.main-fade-in {
+    opacity: 1 !important;
+    transition: opacity 1s ease-in;
+}
+
+
+/* Intron maskin animaatio */
+@keyframes revealText {
+    to {
+        clip-path: inset(0 0 0 0);
+    }
+}
+/* status indikaattori päällä, pieni animointi */
+@keyframes blink {
+    0%, 90%, 100% { opacity: 1; }
+    95% { opacity: 0.4; }
+}
+
+
+/* media kysely yläpalkille / post-it lapulle */
+@media screen and (min-width: 1024px) {
+    .top-bar {
+        height: 60px;
+    }
+    .sticky-note {
+        width: 260px;
+        height: 110px;
+        top: 40px;
+        font-size: 0.85rem;
+    }
+    .sticky-note::before {
+        top: -15%;
+        height: 35px;
+    }
+    #postit-teksti {
+        margin-bottom: 16px;
+    }
+}
+
+
+/*.terminal-input {
+    background-color: #000;
+    border: 1px solid #33FF00;
+    color: #33FF00;
+    border-radius: 0;
+}
+
+.terminal-input:focus {
+    background-color: #0A0A0A;
+    color: #33FF00;
+    border-color: #CCFFCC;
+    box-shadow: 0 0 10px #33FF00;
+}
+.terminal-button {
+    border: 1px solid #33FF00;
+    color: #33FF00;
+    background: transparent;
+    border-radius: 0;
+    text-transform: uppercase;
+    font-weight: bold;
+}*/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*body {
+    width: 100%;
+    height: 100%;
+    background-color: #050505;
+    color: #33FF00;
+    font-family: "Courier New", sans-serif;
+    overflow-x: hidden;
+}*/
+/* Dashboard oletuksena näkymätön */
+/*#dashboard {
+    margin-top: -45%;
+    background-color: #020A02;
+    border: 2px solid #33FF33;
+    padding: 20px;
+    min-height: 80vh;
+    position: relative;
+    overflow: hidden;
+    box-shadow: inset 0 0 20px rgba(51, 255, 51, 0.2), 0 0 10px rgba(51, 255, 51, 0.2);
+    font-family: "Courier New", sans-serif;
+    color: #33FF33;
+    opacity: 0;
+    transition: opacity 1s ease-in;
+}*/
+
+
+
+
+
