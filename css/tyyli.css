@@ -145,6 +145,14 @@ html, body {
     margin-top: 8rem;
     font-family: "Courier New", sans-serif;
 }
+.terminal .row {
+    display: flex;
+    align-items: stretch;
+}
+.terminal .col-md-5,
+.terminal .col-md-7 {
+    display: flex;
+}
 
 
 /* Overlay joka on hallintapaneelin päällä, tekee vanhan näytön tunnelman */
@@ -178,6 +186,9 @@ html, body {
     border: 2px solid #33FF00;
     background-color: rgba(0, 20, 0, 0.7);
     box-shadow: 0 0 15px rgba(51, 255, 0, 0.2);
+    flex: 1;
+    display: flex;
+    flex-direction: column;
 }
 
 
@@ -234,6 +245,66 @@ html, body {
 }
 
 
+/* Päiväkirjan asetukset */
+.paivakirja-body {
+    height: 120vh;
+    display: flex;
+    flex-direction: column;
+}
+.journal-entries {
+    padding-right: 0.5rem;
+    flex-grow: 1;
+    overflow-y: auto;
+    padding-right: 10px;
+    margin-bottom: 10px;
+}
+.journal-entries::-webkit-scrollbar {
+    width: 8px;
+}
+.journal-entries::-webkit-scrollbar-track {
+    background: rgba(0, 20, 0, 0.5);
+}
+.journal-entries::-webkit-scrollbar-thumb {
+    background: #33FF00;
+    border-radius: 2px;
+}
+.journal-entry {
+    padding: 0.5rem 1rem;
+    margin-bottom: 1rem;
+    border-left: 3px solid #33FF00;
+    background-color: rgba(0, 20, 0, 0.5);
+}
+.entry-meta {
+    margin-bottom: 0.3rem;
+    font-weight: bold;
+}
+.input-area {
+    margin-top: 1rem;
+}
+.terminal-input {
+    background-color: rgba(0,0,0,0.8);
+    color: #33FF00;
+    border: 1px solid #33FF00;
+    font-family: "Courier New", monospace;
+    resize: none;
+}
+.terminal-input:focus {
+    outline: none;
+    border-color: #33FF00;
+    box-shadow: 0 0 10px #33FF00;
+}
+.terminal-btn {
+    background-color: transparent;
+    color: #33FF00;
+    font-family: "Courier New", monospace;
+    font-weight: bold;
+}
+.terminal-btn:hover {
+    background-color: rgba(51,255,51,0.1);
+    border: 1px solid #33FF00;
+}
+
+
 /* Intron maskin animaatio */
 @keyframes revealText {
     to {
@@ -268,71 +339,27 @@ html, body {
 }
 
 
-/*.terminal-input {
-    background-color: #000;
-    border: 1px solid #33FF00;
-    color: #33FF00;
-    border-radius: 0;
+/* Media kyselyt päiväkirjan korkeudelle */
+@media screen and (min-width: 768px) and (orientation: portrait) {
+    .paivakirja-body {
+        height: 60vh;
+    }
+    #dashboard {
+        margin-top: 10rem;
+    }
 }
-
-.terminal-input:focus {
-    background-color: #0A0A0A;
-    color: #33FF00;
-    border-color: #CCFFCC;
-    box-shadow: 0 0 10px #33FF00;
+@media screen and (min-width: 1024px) and (orientation: portrait) {
+    #dashboard {
+        margin-top: 12rem;
+    }
 }
-.terminal-button {
-    border: 1px solid #33FF00;
-    color: #33FF00;
-    background: transparent;
-    border-radius: 0;
-    text-transform: uppercase;
-    font-weight: bold;
-}*/
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/*body {
-    width: 100%;
-    height: 100%;
-    background-color: #050505;
-    color: #33FF00;
-    font-family: "Courier New", sans-serif;
-    overflow-x: hidden;
-}*/
-/* Dashboard oletuksena näkymätön */
-/*#dashboard {
-    margin-top: -45%;
-    background-color: #020A02;
-    border: 2px solid #33FF33;
-    padding: 20px;
-    min-height: 80vh;
-    position: relative;
-    overflow: hidden;
-    box-shadow: inset 0 0 20px rgba(51, 255, 51, 0.2), 0 0 10px rgba(51, 255, 51, 0.2);
-    font-family: "Courier New", sans-serif;
-    color: #33FF33;
-    opacity: 0;
-    transition: opacity 1s ease-in;
-}*/
-
-
-
-
-
+@media screen and (min-width: 768px) and (orientation: landscape) {
+    .paivakirja-body {
+        height: 100vh;
+    }
+}
+@media screen and (min-width: 1024px) and (orientation: landscape) {
+    .paivakirja-body {
+        height: 60vh;
+    }
+}
