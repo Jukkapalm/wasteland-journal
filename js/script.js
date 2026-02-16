@@ -117,10 +117,11 @@ function alustaVirta() {
 }
 
 
-// Paivitetään virran status
+// Päivitetään virran status ja power saving mode
 function paivitaVirta() {
     const powerBar = document.getElementById("power-bar");
     const genStatus = document.getElementById("generator-status");
+    const powerSavingOverlay = document.getElementById("power-saving-overlay");
 
     if (!powerBar || !genStatus) return;
 
@@ -140,6 +141,16 @@ function paivitaVirta() {
     } else {
         genStatus.textContent = "[ POIS ]";
         genStatus.className = "status-indicator off";
+    }
+
+    if (virta === 0) {
+        if (powerSavingOverlay && !powerSavingOverlay.classList.contains("active")) {
+            powerSavingOverlay.classList.add("active");
+        }
+    } else {
+        if (powerSavingOverlay && powerSavingOverlay.classList.contains("active")) {
+            powerSavingOverlay.classList.remove("active");
+        }
     }
 }
 
