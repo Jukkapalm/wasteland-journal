@@ -363,3 +363,121 @@ html, body {
         height: 60vh;
     }
 }
+
+
+/* Glitch efekti kohonnut */
+@keyframes glitch-medium {
+    0%, 100% {
+        text-shadow: 0 0 #fff;
+    }
+    10% {
+        text-shadow: 2px 0 #FF00FF, -2px 0 #00FFFF, 1px 1px #0F0;
+    }
+    20% {
+        text-shadow: -2px 1px #FF0, 2px -1px #0FF, 1px -1px #F0F;
+    }
+    30% {
+        text-shadow: 3px -1px #F00, -3px 1px #0F0, 1px 0 #00F;
+    }
+    40% {
+        text-shadow: -2px -2px #FF0, 2px 2px #0FF, -1px 1px #F0F;
+    }
+    50% {
+        text-shadow: 2px 0 #FF00FF, -2px 0 #00FFFF, 1px 1px #0F0;
+    }
+    60% {
+        text-shadow: -2px 1px #FF0, 2px -1px #0FF, 1px -1px #F0F;
+    }
+    70% {
+        text-shadow: 3px -1px #F00, -3px 1px #0F0, 1px 0 #00F;
+    }
+    80% {
+        text-shadow: -2px -2px #FF0, 2px 2px #0FF, -1px 1px #F0F;
+    }
+    90% {
+        text-shadow: 2px 0 #FF00FF, -2px 0 #00FFFF, 1px 1px #0F0;
+    }
+}
+
+
+/* Glitch efekti korkea */
+@keyframes glitch-high {
+    0% {
+        text-shadow: 0 0 #fff;
+    }
+    10% {
+        text-shadow: 5px 0 #FF00FF, -5px 0 #00FFFF, 2px 2px #0F0;
+    }
+    20% {
+        text-shadow: -4px 3px #FF0, 4px -3px #0FF, 1px -1px #F0F;
+    }
+    30% {
+        text-shadow: 6px -2px #F00, -6px 2px #0F0, 3px 0 #00F;
+    }
+    40% {
+        text-shadow: -5px -5px #FF0, 5px 5px #0FF, -2px 3px #F0F;
+    }
+    50% {
+        text-shadow: 5px 0 #FF00FF, -5px 0 #00FFFF, 2px 2px #0F0;
+    }
+    60% {
+        text-shadow: -4px 3px #FF0, 4px -3px #0FF, 1px -1px #F0F;
+    }
+    70% {
+        text-shadow: 6px -2px #F00, -6px 2px #0F0, 3px 0 #00F;
+    }
+    80% {
+        text-shadow: -5px -5px #FF0, 5px 5px #0FF, -2px 3px #F0F;
+    }
+    90% {
+        text-shadow: 5px 0 #FF00FF, -5px 0 #00FFFF, 2px 2px #0F0;
+    }
+    100% {
+        text-shadow: -4px 3px #FF0, 4px -3px #0FF, 1px -1px #F0F;
+    }
+}
+
+
+/* Luokat joihin lisätään glitch medium */
+.glitch-medium .bunker-terminal,
+.glitch-medium .status-title,
+.glitch-medium .paivakirja-title,
+.glitch-medium label,
+.glitch-medium .journal-entry,
+.glitch-medium .paiva,
+.glitch-medium .temp-display,
+.glitch-medium .terminal-btn {
+    animation: glitch-medium 2s infinite;
+}
+
+
+/* Luokat johon lisätään glitch high */
+.glitch-high .bunker-terminal,
+.glitch-high .status-title,
+.glitch-high .paivakirja-title,
+.glitch-high label,
+.glitch-high .journal-entry,
+.glitch-high .paiva,
+.glitch-high .temp-display,
+.glitch-high .terminal-btn {
+    animation: glitch-high 2s infinite;
+}
+
+
+/* Luokat joista poistetaan glitch efekti */
+.no-glitch .bunker-terminal,
+.no-glitch .status-title,
+.no-glitch .paivakirja-title,
+.no-glitch label,
+.no-glitch .journal-entry,
+.no-glitch .status-monitor,
+.no-glitch .paivakirja,
+.no-glitch .paiva,
+.no-glitch .temp-display,
+.no-glitch .terminal-btn {
+    animation: none !important;
+    transform: none !important;
+    text-shadow: 0 0 5px #00FF00 !important;
+    filter: none !important;
+    opacity: 1 !important;
+}
