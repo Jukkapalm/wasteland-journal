@@ -105,45 +105,85 @@ function paivitaVirta() {
 // Virran kulutuksen laskenta
 let generaattoriKaynnistyy = false;
 let polttoaine = 50;
+let lampotila = 18;
 function kaynnistaVirranKulutus() {
     setInterval(function () {
 
         if (generaattoriKaynnistyy) return;
 
-        const mikaanEiPaalla = generaattoriPaalla || ilmansuodatinPaalla || lammitinPaalla || jalostinPaalla;
+        // Peruskulutus (terminaali aina päällä)
+        let virtamuutos = -0.3;
+        let polttoainemuutos = 0;
+        let lampotilamuutos = 0;
 
-        if (mikaanEiPaalla) {
-        
-            if (generaattoriPaalla) {
-                virta += 2;
-                polttoaine -= 1;
-                if (ilmansuodatinPaalla) virta -= 1;
-            } else {
-                virta -= 1;
-                if (ilmansuodatinPaalla) virta -= 1;
-            }
-
-            if (lammitinPaalla) virta -= 1;
-
-            if (jalostinPaalla) {
-                polttoaine += 1;
-                virta -= 1;
-                if (polttoaine > 100) polttoaine = 100;
-            }
-
-            if (virta > 100) virta = 100;
-            if (virta < 0) virta = 0;
-            if (polttoaine < 0) polttoaine = 0;
-            if (polttoaine > 100) polttoaine = 100;
-
-            if (polttoaine === 0 || virta === 100) {
-                generaattoriPaalla = false;
-            }
-
-            paivitaVirta();
-            paivitaPolttoaine();
+        // Generaattori (tuottaa virtaa, kuluttaa polttoainetta)
+        if (generaattoriPaalla) {
+            virtamuutos += 1.2;
+            polttoainemuutos -= 0.8;
         }
+
+        // Ilmansuodatin (kuluttaa virtaa)
+        if (ilmansuodatinPaalla) {
+            virtamuutos -= 0.5;
+        }
+
+        // Lämmitin päällä ( kuluttaa virtaa, nostaa lämpötilaa)
+        if (lammitinPaalla) {
+            virtamuutos -= 0.4;
+            lampotilamuutos = 0.2;
+        } else {
+            lampotilamuutos = -0.15;
+        }
+
+        // Jalostus (kuluttaa virtaa, tuottaa polttoainetta)
+        if (jalostinPaalla) {
+            virtamuutos -= 0.6;
+            polttoainemuutos += 1.0;
+        }
+
+        virta += virtamuutos;
+        polttoaine += polttoainemuutos;
+        lampotila += lampotilamuutos;
+
+        if (virta > 100) virta = 100;
+        if (virta < 0) virta = 0;
+        if (polttoaine < 0) polttoaine = 0;
+        if (polttoaine > 100) polttoaine = 100;
+        if (lampotila < 5) lampotila = 5;
+        if (lampotila > 25) lampotila = 25;
+
+        // Automaattiset sammutukset
+        // Jos polttoaine loppuu, generaattori sammuu
+        if (polttoaine === 0 && generaattoriPaalla) {
+            generaattoriPaalla = false;
+        }
+        // Jos virta täynnä, generaattori sammuu
+        if ( virta === 100 && generaattoriPaalla) {
+            generaattoriPaalla = false;
+        }
+
+        paivitaVirta();
+        paivitaPolttoaine();
+        paivitaLampotila();
     }, 1000);
+}
+
+
+// Funktio lämpötilan päivitykseen
+function paivitaLampotila() {
+    const tempDisplay = document.querySelector(".temp-display");
+    if (!tempDisplay) return;
+
+    const pyoristetty = Math.round(lampotila);
+    tempDisplay.textContent = `SISÄLÄMPÖTILA: ${pyoristetty > 0 ? '+' : ''}${pyoristetty}°C`;
+
+    if (lampotila < 10) {
+        tempDisplay.style.color = "#FF0000";
+    } else if (lampotila < 15) {
+        tempDisplay.style.color = "#FFA500";
+    } else {
+        tempDisplay.style.color = "#33FF00";
+    }
 }
 
 
