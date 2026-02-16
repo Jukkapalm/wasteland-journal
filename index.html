@@ -72,14 +72,14 @@
                                 <div class="mb-3">
                                     <label class="mt-1">GENERAATTORIN POLTTOAINE:</label>
                                     <div class="progress terminal-progress">
-                                        <div class="progress-bar bg-success" style="width: 70%"></div>
+                                        <div id="fuel-bar" class="progress-bar"></div>
                                     </div>
                                 </div>
 
                                 <div class="mb-3">
                                     <label>AKKUVIRTA:</label>
                                     <div class="progress terminal-progress mt-1">
-                                        <div class="progress-bar bg-success" role="progressbar" style="width: 90%"></div>
+                                        <div id="power-bar" class="progress-bar"></div>
                                     </div>
                                 </div>
 
@@ -87,17 +87,22 @@
 
                                 <div class="mb-2 d-flex justify-content-between">
                                     <label>GENERAATTORI:</label>
-                                    <span class="status-indicator on">[ PÄÄLLÄ ]</span>
+                                    <span id="generator-status" class="status-indicator off" style="cursor: pointer;">[ POIS ]</span>
                                 </div>
 
                                 <div class="mb-2 d-flex justify-content-between">
                                     <label>ILMANSUODATUS:</label>
-                                    <span class="status-indicator off">[ POIS ]</span>
+                                    <span id="air-filter-status" class="status-indicator off" style="cursor: pointer;">[ POIS ]</span>
                                 </div>
 
                                 <div class="mb-2 d-flex justify-content-between">
                                     <label>LÄMMITIN:</label>
-                                    <span class="status-indicator off">[ POIS ]</span>
+                                    <span id="heater-status" class="status-indicator off" style="cursor: pointer;">[ POIS ]</span>
+                                </div>
+
+                                <div class="mb-2 d-flex justify-content-between">
+                                    <label>POLTTOAINEEN JALOSTUS:</label>
+                                    <span id="refinery-status" class="status-indicator off" style="cursor: pointer;">[ POIS ]</span>
                                 </div>
 
                                 <div class="mt-3 text-center">
@@ -107,9 +112,42 @@
                         </div>
 
                         <!-- Päiväkirja -->
-                        <div class="col-md-7">
-                            <div class="paivakirja p-3 h-100">
-                                <h4 class="paivakirja-title">Päiväkirja // LUKUTILA</h4>
+                        <div class="col-md-7 mb-4">
+                            <div class="paivakirja p-3">
+                                <h4 class="paivakirja-title">Päiväkirja</h4>
+
+                                <div class="paivakirja-body d-flex flex-column gap-3">
+                                    <div id="journal-entries" class="journal-entries overflow-auto">
+                                        <div class="journal-entry mb-3">
+                                            <div class="entry-meta">Päivä 1048 - KLO 23.33</div>
+                                            <p>Täällä näkyy päiväkirjamerkintä, kun tietokanta otetaan käyttöön.</p>
+                                        </div>
+
+                                        <div class="journal-entry mb-3">
+                                            <div class="entry-meta">Päivä 1048 - KLO 23.33</div>
+                                            <p>Täällä näkyy päiväkirjamerkintä, kun tietokanta otetaan käyttöön.</p>
+                                        </div>
+                                        <div class="journal-entry mb-3">
+                                            <div class="entry-meta">Päivä 1048 - KLO 23.33</div>
+                                            <p>Täällä näkyy päiväkirjamerkintä, kun tietokanta otetaan käyttöön.</p>
+                                        </div>
+                                        <div class="journal-entry mb-3">
+                                            <div class="entry-meta">Päivä 1048 - KLO 23.33</div>
+                                            <p>Täällä näkyy päiväkirjamerkintä, kun tietokanta otetaan käyttöön.</p>
+                                        </div>
+                                        <div class="journal-entry mb-3">
+                                            <div class="entry-meta">Päivä 1048 - KLO 23.33</div>
+                                            <p>Täällä näkyy päiväkirjamerkintä, kun tietokanta otetaan käyttöön.</p>
+                                        </div>
+                                        
+                                    </div>
+                                    <hr class="terminal-hr">
+                                    <div class="input-area mt-2">
+                                        <label class="mb-2">> UUSI MERKINTÄ_</label>
+                                        <textarea id="new-entry-text" class="form-control terminal-input" rows="1" placeholder="Kirjoita uusi merkintä..."></textarea>
+                                        <button id="add-entry-btn" class="btn terminal-btn mt-2">TALLENNA TIEDOSTO</button>
+                                    </div>
+                                </div>  
                             </div>
                         </div>
                     </div>
@@ -122,23 +160,3 @@
         <script src="js/script.js"></script>
     </body>
 </html>  
-        
-
-
-                    <!--<div class="col-md-7">
-                        <div class="terminal-box p-3 h-100">
-                            <h4 class="box-title">Päiväkirja // LUKUTILA</h4>
-                        </div>
-
-                        <div class="journal-entry mb-4">
-                            <div class="entry-meta text-muted">12.02.2087 - KLO 23:15</div>
-                            <p>Löysin tänään vanhan huoltoaseman.</p>
-                        </div>
-
-                        <hr class="terminal-hr">
-
-                        <div class="input-area mt-4">
-                            <label class="mb-2">> UUSI MERKINTÄ_</label>
-                            <textarea class="form-control terminal-input" rows="5"></textarea>
-                            <button class="btn terminal-btn mt-3">TALLENNA TIEDOSTO</button>
-                        </div>
