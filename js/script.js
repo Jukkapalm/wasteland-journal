@@ -21,6 +21,21 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 
+// Globaalit muuttujat
+let sateilytaso = "MATALA";
+let generaattoriPaalla = false;
+let generaattoriKaynnistyy = false;
+let ilmansuodatinPaalla = false;
+let ilmansuodatinKaynnistyy = false;
+let lammitinPaalla = false;
+let lammitinKaynnistyy = false;
+let jalostinPaalla = false;
+let jalostinKaynnistyy = false;
+let virta = 0;
+let polttoaine = 50;
+let lampotila = 18;
+
+
 // Arvotaan säteilynmäärä
 function sateilyArvo() {
 
@@ -30,41 +45,69 @@ function sateilyArvo() {
             taytto: 20,
             badgeVari: "bg-radiation-green",
             barVari: "bg-radiation-green",
-            tekstiVari: ""
+            tekstiVari: "",
+            glitchLuokka: ""
         },
         {
             arvo: "KOHONNUT",
             taytto: 50,
             badgeVari: "bg-warning",
             barVari: "bg-radiation-green",
-            tekstiVari: "text-dark"
+            tekstiVari: "text-dark",
+            glitchLuokka: "glitch-medium"
         },
         {
             arvo: "KORKEA",
             taytto: 85,
             badgeVari: "bg-danger",
             barVari: "bg-danger",
-            tekstiVari: "text-light"
+            tekstiVari: "text-light",
+            glitchLuokka: "glitch-high"
         }
     ];
 
     const randOpt = Math.floor(Math.random() * sateilyOpt.length);
     const tila = sateilyOpt[randOpt];
+    sateilytaso = tila.arvo;
 
     const badge = document.getElementById("radiation-badge");
     const radBar = document.getElementById("radiation-bar");
+    const dashboard = document.getElementById("dashboard");
 
     badge.textContent = tila.arvo;
     badge.className = "badge float-end " + tila.badgeVari + " " + tila.tekstiVari;
 
     radBar.style.width = tila.taytto + "%";
     radBar.className = "progress-bar " + tila.barVari;
+
+    if (tila.glitchLuokka) {
+        dashboard.classList.add(tila.glitchLuokka);
+    }
+    tarkistaGlitchTila();
+}
+
+
+// Poistetaan häiriö jos ilmansuodatin päällä ja lisätään no-glitch
+// Ja määritellään glitchin taso säteilytason mukaan
+function tarkistaGlitchTila() {
+    const dashboard = document.getElementById("dashboard");
+
+    if (ilmansuodatinPaalla) {
+        dashboard.classList.remove("glitch-medium", "glitch-high");
+        dashboard.classList.add("no-glitch");
+    } else {
+        dashboard.classList.remove("no-glitch");
+    }
+
+    if (sateilytaso === "KOHONNUT") {
+        dashboard.classList.add("glitch-medium");
+    } else if (sateilytaso === "KORKEA") {
+        dashboard.classList.add("glitch-high");
+    }
 }
 
 
 // Arvotaan virran määrä
-let virta = 0;
-let generaattoriPaalla = false;
 function alustaVirta() {
     virta = Math.floor(Math.random() * 61) + 20;
     paivitaVirta();
@@ -82,7 +125,6 @@ function paivitaVirta() {
     if (!powerBar || !genStatus) return;
 
     powerBar.style.width = virta + "%";
-    //powerBar.textContent = virta + "%";
 
     if (virta < 25) {
         powerBar.className = "progress-bar bg-danger";
@@ -103,9 +145,6 @@ function paivitaVirta() {
 
 
 // Virran kulutuksen laskenta
-let generaattoriKaynnistyy = false;
-let polttoaine = 50;
-let lampotila = 18;
 function kaynnistaVirranKulutus() {
     setInterval(function () {
 
@@ -187,6 +226,7 @@ function paivitaLampotila() {
 }
 
 
+// Polttoaineen barin värit
 function paivitaPolttoaine() {
     const fuelBar = document.getElementById("fuel-bar");
     if (!fuelBar) return;
@@ -229,8 +269,6 @@ function aktivoiGeneraattoriKlikkaus() {
 
 
 // Ilmansuodattimien klikkaus
-let ilmansuodatinPaalla = false;
-let ilmansuodatinKaynnistyy = false;
 function aktivoiIlmansuodatin() {
     const filterStatus = document.getElementById("air-filter-status");
     if (!filterStatus) return;
@@ -247,19 +285,19 @@ function aktivoiIlmansuodatin() {
                 ilmansuodatinPaalla = true;
                 filterStatus.textContent = "[ PÄÄLLÄ ]";
                 filterStatus.className = "status-indicator on";
+                tarkistaGlitchTila();
             }, 2000);
         } else if (ilmansuodatinPaalla) {
             ilmansuodatinPaalla = false;
             filterStatus.textContent = "[ POIS ]";
             filterStatus.className = "status-indicator off";
+            tarkistaGlitchTila();
         }
     });
 }
 
 
 // Lämmittimen klikkaus
-let lammitinPaalla = false;
-let lammitinKaynnistyy = false;
 function aktivoiLammitin() {
     const heater = document.getElementById("heater-status");
     if (!heater) return;
@@ -287,8 +325,6 @@ function aktivoiLammitin() {
 
 
 // Jalostus klikkaus
-let jalostinPaalla = false;
-let jalostinKaynnistyy = false;
 function aktivoiJalostin() {
     const refinery = document.getElementById("refinery-status");
     if (!refinery) return;
