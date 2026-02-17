@@ -84,6 +84,22 @@ function sateilyArvo() {
         dashboard.classList.add(tila.glitchLuokka);
     }
     tarkistaGlitchTila();
+    tarkistaSateilyVaroitus();
+}
+
+
+// Tarkistaa pitääkö säteilyvaroitus näyttää
+function tarkistaSateilyVaroitus() {
+    const radWarning = document.getElementById("radiation-warning");
+
+    if (radWarning) {
+        // Näytetään varoitus jos säteily on korkea ja ilmansuodatin ei ole päällä
+        if(sateilytaso === "KORKEA" && !ilmansuodatinPaalla) {
+            radWarning.classList.add("show");
+        } else {
+            radWarning.classList.remove("show");
+        }
+    }
 }
 
 
@@ -104,6 +120,7 @@ function tarkistaGlitchTila() {
     } else if (sateilytaso === "KORKEA") {
         dashboard.classList.add("glitch-high");
     }
+    tarkistaSateilyVaroitus();
 }
 
 
