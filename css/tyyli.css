@@ -116,6 +116,7 @@ html, body {
     backdrop-filter: blur(1px);
 }
 
+
 /* Post-it lapun teksti */
 #postit-teksti {
     color: #333;
@@ -170,7 +171,7 @@ html, body {
         transparent 2px
     );
     pointer-events: none; /* Päästää klikkaukset läpi */
-    z-index: 90;
+    z-index: 95;
 }
 
 
@@ -362,6 +363,9 @@ html, body {
     .paivakirja-body {
         height: 60vh;
     }
+    #dashboard {
+        margin-top: 5rem;
+    }
 }
 
 
@@ -470,7 +474,7 @@ html, body {
     width: 100%;
     height: 100%;
     background-color: rgba(0, 0, 0, 0.95);
-    z-index: 85;
+    z-index: 90;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -502,9 +506,13 @@ html, body {
 #generator-status,
 #air-filter-status,
 #heater-status,
-#refinery-status {
+#refinery-status,
+.generator,
+.air-filter,
+.heater,
+.refinery {
     position: relative;
-    z-index: 95;
+    z-index: 130;
 }
 
 
@@ -566,7 +574,6 @@ html, body {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 1rem;
     z-index: 120;
     opacity: 0;
     pointer-events: none;
@@ -601,4 +608,47 @@ html, body {
         opacity: 0.6;
         transform: scale(1.05);
     }
+}
+
+
+/* Säteilyvaroitus */
+.radiation-warning {
+    position: fixed;
+    top: 30%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    z-index: 85;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 1s ease-in-out;
+}
+.radiation-warning.show {
+    opacity: 1;
+}
+.warning-icon-rad {
+    font-size: clamp(3rem, 8vw, 6rem);
+    color: #FFFF00;
+    text-shadow: 
+        0 0 20px #FFFF00,
+        0 0 40px #FFFF00,
+        0 0 60px #FFFF00,
+        0 0 80px #FF0000;
+    animation: warning-pulse 1.2s infinite;
+}
+.warning-text-rad {
+    color: #FFFF00;
+    font-family: "Courier New", monospace;
+    font-size: clamp(1rem, 3vw, 2rem);
+    font-weight: bold;
+    text-align: center;
+    letter-spacing: 3px;
+    line-height: 1.5;
+    text-shadow: 
+        0 0 10px #FFFF00,
+        0 0 20px #FFFF00,
+        0 0 30px #FF0000;
+    animation: warning-pulse 1.2s infinite;
 }
