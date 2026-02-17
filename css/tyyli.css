@@ -368,72 +368,51 @@ html, body {
 /* Glitch efekti kohonnut */
 @keyframes glitch-medium {
     0%, 100% {
-        text-shadow: 0 0 #fff;
+        text-shadow: 3px 0 1px #FF00FF, -3px 0 1px #00FFFF;
     }
-    10% {
-        text-shadow: 2px 0 #FF00FF, -2px 0 #00FFFF, 1px 1px #0F0;
+    1% {
+        text-shadow: 2px 0 1px #FF00FF, -2px 0 1px #00FFFF;
     }
     20% {
-        text-shadow: -2px 1px #FF0, 2px -1px #0FF, 1px -1px #F0F;
+        text-shadow: 2px 0 1px #FF00FF, -2px 0 1px #00FFFF;
+    }
+    21% {
+        text-shadow: 5px 0 1px #FF00FF, -5px 0 1px #00FFFF;
     }
     30% {
-        text-shadow: 3px -1px #F00, -3px 1px #0F0, 1px 0 #00F;
-    }
-    40% {
-        text-shadow: -2px -2px #FF0, 2px 2px #0FF, -1px 1px #F0F;
-    }
-    50% {
-        text-shadow: 2px 0 #FF00FF, -2px 0 #00FFFF, 1px 1px #0F0;
+        text-shadow: 4px 0 1px #FF00FF, -4px 0 1px #00FFFF;
     }
     60% {
-        text-shadow: -2px 1px #FF0, 2px -1px #0FF, 1px -1px #F0F;
+        text-shadow: 2px 0 1px #FF00FF, -2px 0 1px #00FFFF;
     }
     70% {
-        text-shadow: 3px -1px #F00, -3px 1px #0F0, 1px 0 #00F;
-    }
-    80% {
-        text-shadow: -2px -2px #FF0, 2px 2px #0FF, -1px 1px #F0F;
-    }
-    90% {
-        text-shadow: 2px 0 #FF00FF, -2px 0 #00FFFF, 1px 1px #0F0;
+        text-shadow: 4px 0 1px #FF00FF, -4px 0 1px #00FFFF;
     }
 }
 
 
 /* Glitch efekti korkea */
 @keyframes glitch-high {
-    0% {
-        text-shadow: 0 0 #fff;
+    0%, 100% {
+        text-shadow: 6px 0 1px #FF00FF, -6px 0 1px #00FFFF;
     }
-    10% {
-        text-shadow: 5px 0 #FF00FF, -5px 0 #00FFFF, 2px 2px #0F0;
+    1% {
+        text-shadow: 4px 0 1px #FF00FF, -4px 0 1px #00FFFF;
     }
     20% {
-        text-shadow: -4px 3px #FF0, 4px -3px #0FF, 1px -1px #F0F;
+        text-shadow: 4px 0 1px #FF00FF, -4px 0 1px #00FFFF;
+    }
+    21% {
+        text-shadow: 10px 0 1px #FF00FF, -10px 0 1px #00FFFF;
     }
     30% {
-        text-shadow: 6px -2px #F00, -6px 2px #0F0, 3px 0 #00F;
-    }
-    40% {
-        text-shadow: -5px -5px #FF0, 5px 5px #0FF, -2px 3px #F0F;
-    }
-    50% {
-        text-shadow: 5px 0 #FF00FF, -5px 0 #00FFFF, 2px 2px #0F0;
+        text-shadow: 8px 0 1px #FF00FF, -8px 0 1px #00FFFF;
     }
     60% {
-        text-shadow: -4px 3px #FF0, 4px -3px #0FF, 1px -1px #F0F;
+        text-shadow: 4px 0 1px #FF00FF, -4px 0 1px #00FFFF;
     }
     70% {
-        text-shadow: 6px -2px #F00, -6px 2px #0F0, 3px 0 #00F;
-    }
-    80% {
-        text-shadow: -5px -5px #FF0, 5px 5px #0FF, -2px 3px #F0F;
-    }
-    90% {
-        text-shadow: 5px 0 #FF00FF, -5px 0 #00FFFF, 2px 2px #0F0;
-    }
-    100% {
-        text-shadow: -4px 3px #FF0, 4px -3px #0FF, 1px -1px #F0F;
+        text-shadow: 8px 0 1px #FF00FF, -8px 0 1px #00FFFF;
     }
 }
 
@@ -447,7 +426,7 @@ html, body {
 .glitch-medium .paiva,
 .glitch-medium .temp-display,
 .glitch-medium .terminal-btn {
-    animation: glitch-medium 2s infinite;
+    animation: glitch-medium 10s infinite ease-in-out;
 }
 
 
@@ -460,7 +439,7 @@ html, body {
 .glitch-high .paiva,
 .glitch-high .temp-display,
 .glitch-high .terminal-btn {
-    animation: glitch-high 2s infinite;
+    animation: glitch-high 10s infinite ease-in-out;
 }
 
 
