@@ -212,6 +212,34 @@ function kaynnistaVirranKulutus() {
             generaattoriPaalla = false;
         }
 
+        if (virta === 0) {
+            if (ilmansuodatinPaalla) {
+                ilmansuodatinPaalla = false;
+                const filterStatus = document.getElementById("air-filter-status");
+                if (filterStatus) {
+                    filterStatus.textContent = "[ POIS ]";
+                    filterStatus.className = "status-indicator off";
+                    tarkistaGlitchTila();
+                }
+            }
+            if (lammitinPaalla) {
+                lammitinPaalla = false;
+                const heaterStatus = document.getElementById("heater-status");
+                if (heaterStatus) {
+                    heaterStatus.textContent = "[ POIS ]";
+                    heaterStatus.className = "status-indicator off";
+                }
+            }
+            if (jalostinPaalla) {
+                jalostinPaalla = false;
+                const refineryStatus = document.getElementById("refinery-status");
+                if (refineryStatus) {
+                    refineryStatus.textContent = "[ POIS ]";
+                    refineryStatus.className = "status-indicator off";
+                }
+            }
+        }
+
         paivitaVirta();
         paivitaPolttoaine();
         paivitaLampotila();
@@ -222,17 +250,41 @@ function kaynnistaVirranKulutus() {
 // Funktio lämpötilan päivitykseen
 function paivitaLampotila() {
     const tempDisplay = document.querySelector(".temp-display");
+    const frostOverlay = document.getElementById("frost-overlay");
+    const coldWarning = document.getElementById("cold-warning");
+
     if (!tempDisplay) return;
 
     const pyoristetty = Math.round(lampotila);
     tempDisplay.textContent = `SISÄLÄMPÖTILA: ${pyoristetty > 0 ? '+' : ''}${pyoristetty}°C`;
 
+    // Värikoodaus lämpötilalle
     if (lampotila < 10) {
         tempDisplay.style.color = "#FF0000";
     } else if (lampotila < 15) {
         tempDisplay.style.color = "#FFA500";
     } else {
         tempDisplay.style.color = "#33FF00";
+    }
+
+    // Huurteen ja varoituksen hallinta
+    if (frostOverlay && coldWarning) {
+
+        // Poistetaan kaikki huurre luokat ensin
+        frostOverlay.classList.remove("frost-light", "frost-medium", "frost-heavy");
+
+        if (lampotila < 8 && lampotila >= 7) {
+            frostOverlay.classList.add("frost-light");
+            coldWarning.classList.add("show");
+        } else if (lampotila < 7 && lampotila >= 6) {
+            frostOverlay.classList.add("frost-medium");
+            coldWarning.classList.add("show");
+        } else if (lampotila < 6) {
+            frostOverlay.classList.add("frost-heavy");
+            coldWarning.classList.add("show");
+        } else {
+            coldWarning.classList.remove("show");
+        }
     }
 }
 
