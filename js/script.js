@@ -13,6 +13,23 @@ setTimeout(() => {
 
 // Funktiot jotka suoritetaan kun sivu avautunut
 document.addEventListener("DOMContentLoaded", function () {
+
+    const katastrofista = new Date("2026-02-19");
+    function updateDays() {
+        const currentDate = new Date();
+
+        const timeDifference = currentDate.getTime() - katastrofista.getTime();
+        const daysPassed = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
+
+        const daysElement = document.querySelector(".paiva");
+
+        if (daysElement) {
+            const displayDays = daysPassed > 0 ? daysPassed : 0;
+            daysElement.textContent = `${displayDays} Päivää`;
+        }
+    }
+    updateDays();
+
     sateilyArvo();
     alustaVirta();
     aktivoiIlmansuodatin();
