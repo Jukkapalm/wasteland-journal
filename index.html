@@ -15,6 +15,7 @@
     </head>
     <body>
 
+        <!-- Intro / header jonka javascript häivyttää 4s jälkeen ja tuo päänäkymän esiin -->
         <header class="intro-container">
             <div class="container-fluid p-0">
 
@@ -28,7 +29,7 @@
             </div>
         </header>
 
-        <!-- Pääsisältö -->
+        <!-- Pääsisältö, aluksi piilossa, javascript tuo esiin -->
         <main class="main-content">
 
             <!-- Yläpalkki ja post-it lappu -->
@@ -43,15 +44,25 @@
 
             <!-- Päänäkymän hallintapaneeli -->
             <div class="container-fluid" id="dashboard">
+
+                <!-- CRT-efekti, vanhan näytön tunnelma -->
                 <div class="crt-overlay"></div>
+
+                <!-- Power saving mode, tulee näkyviin kun virta = 0 -->
                 <div id="power-saving-overlay" class="power-saving-overlay">
                     <div class="power-saving-text">POWER SAVING MODE</div>
                 </div>
+
+                <!-- Huurtumisen overlay, tulee näkyviin kun lämpötila liian alhainen -->
                 <div id="frost-overlay" class="frost-overlay"></div>
+
+                <!-- Kylmyysvaroitus, tulee näkyviin kun lämpötila liaan alhainen -->
                 <div id="cold-warning" class="cold-warning">
                     <div class="warning-icon">⚠</div>
                     <div class="warning-text">KÄYNNISTÄ LÄMMITIN<br>LÄMPÖTILA ALHAINEN</div>
                 </div>
+
+                <!-- Säteilyvaroitus, tulee näkyviin kun säteily KORKEA ja ilman suodattimet ei ole päällä -->
                 <div id="radiation-warning" class="radiation-warning">
                     <div class="warning-icon-rad">☢</div>
                     <div class="warning-text-rad">SÄTEILYTASO KORKEA<br>KÄYNISTÄ ILMANSUODATTIMET</div>
@@ -61,18 +72,20 @@
                 <div class="terminal">
                     <div class="row">
 
-                        <!-- Status monitor -->
+                        <!-- Status monitor, vasen paneeli -->
                         <div class="col-md-5 mb-4">
                             <div class="status-monitor p-3">
                                 <h4 class="status-title">STATUS_MONITOR</h4>
 
+                                <!-- Laskee päivät fiktiivisestä katastrofista, javascript päivittää tämän automaattisesti -->
                                 <div class="stat-row mb-3">
                                     <label>KATASTROFISTA:</label>
-                                    <span class="paiva fw-bold">1048 Päivää</span>
+                                    <span class="paiva fw-bold">0 Päivää</span>
                                 </div>
 
                                 <hr class="terminal-hr">
 
+                                <!-- Säteilytaso, javascript arpoo säteilyntason ja asettaa tyylit sekä värit -->
                                 <div class="mb-3">
                                     <label>SÄTEILYTASO</label>
                                     <span id="radiation-badge" class="badge float-end"></span>
@@ -81,6 +94,7 @@
                                     </div>
                                 </div>
 
+                                <!-- Generaattorin polttoainemittari -->
                                 <div class="mb-3">
                                     <label class="mt-1">GENERAATTORIN POLTTOAINE:</label>
                                     <div class="progress terminal-progress">
@@ -88,6 +102,7 @@
                                     </div>
                                 </div>
 
+                                <!-- Akkujen varaustaso -->
                                 <div class="mb-3">
                                     <label>AKKUVIRTA:</label>
                                     <div class="progress terminal-progress mt-1">
@@ -97,6 +112,7 @@
 
                                 <hr class="terminal-hr">
 
+                                <!-- Laitteiden status indikaattori päällä/pois -->
                                 <div class="mb-2 d-flex justify-content-between">
                                     <label class="generator">GENERAATTORI:</label>
                                     <span id="generator-status" class="status-indicator off" style="cursor: pointer;">[ POIS ]</span>
@@ -123,49 +139,56 @@
                             </div>
                         </div>
 
-                        <!-- Päiväkirja -->
+                        <!-- Päiväkirja, oikea paneeli. JavaScript hakee tietokannasta päiväkirja merkinnät ja täyttää päiväkirjan -->
                         <div class="col-md-7 mb-4">
                             <div class="paivakirja p-3">
                                 <h4 class="paivakirja-title">Päiväkirja</h4>
-
                                 <div class="paivakirja-body d-flex flex-column gap-3">
-                                    <div id="journal-entries" class="journal-entries overflow-auto">
-                                        <div class="journal-entry mb-3">
-                                            <div class="entry-meta">Päivä 1048 - KLO 23.33</div>
-                                            <p>Täällä näkyy päiväkirjamerkintä, kun tietokanta otetaan käyttöön.</p>
-                                        </div>
 
-                                        <div class="journal-entry mb-3">
-                                            <div class="entry-meta">Päivä 1048 - KLO 23.33</div>
-                                            <p>Täällä näkyy päiväkirjamerkintä, kun tietokanta otetaan käyttöön.</p>
-                                        </div>
-                                        <div class="journal-entry mb-3">
-                                            <div class="entry-meta">Päivä 1048 - KLO 23.33</div>
-                                            <p>Täällä näkyy päiväkirjamerkintä, kun tietokanta otetaan käyttöön.</p>
-                                        </div>
-                                        <div class="journal-entry mb-3">
-                                            <div class="entry-meta">Päivä 1048 - KLO 23.33</div>
-                                            <p>Täällä näkyy päiväkirjamerkintä, kun tietokanta otetaan käyttöön.</p>
-                                        </div>
-                                        <div class="journal-entry mb-3">
-                                            <div class="entry-meta">Päivä 1048 - KLO 23.33</div>
-                                            <p>Täällä näkyy päiväkirjamerkintä, kun tietokanta otetaan käyttöön.</p>
-                                        </div>
-                                        
-                                    </div>
+                                    <!-- Päiväkirjamerkinnät tulevat tähän -->
+                                    <div id="journal-entries" class="journal-entries overflow-auto"></div>
+
                                     <hr class="terminal-hr">
+
+                                    <!-- Uuden merkinnän syöttöalue -->
                                     <div class="input-area mt-2">
-                                        <label class="mb-2">> UUSI MERKINTÄ_</label>
+                                        <label class="mb-2">&gt; UUSI MERKINTÄ_</label>
                                         <textarea id="new-entry-text" class="form-control terminal-input" rows="1" placeholder="Kirjoita uusi merkintä..."></textarea>
+
+                                        <!-- Painike avaa modalin, ei tallenna suoraan -->
                                         <button id="add-entry-btn" class="btn terminal-btn mt-2">TALLENNA TIEDOSTO</button>
                                     </div>
+
                                 </div>  
                             </div>
                         </div>
+
                     </div>
                 </div>
             </div>
         </main>
+
+        <!-- Pin modal tunnistautumisikkuna, joka aukeaa dashboardin päälle kun painiketta tallenna tiedosto on painettu -->
+        <div id="pin-modal" class="pin-modal-overlay">
+            <div class="pin-modal-box">
+
+                <!-- &#128274; = 🔒 lukon emoji HTML-entiteettinä -->
+                <h3 class="pin-modal-otsikko">&#128274; TUNNISTAUTUMINEN VAADITAAN</h3>
+
+                <p class="pin-modal-ohje">Anna PIN-koodi tallentaaksesi merkinnän.</p>
+
+                <input type="password" id="pin-input" class="pin-input" maxlength="10" placeholder="_ _ _ _" autocomplete="off"/>
+
+                <!-- Tähän javascript kirjoittaa virheen, jos pin väärä -->
+                <div id="pin-viesti" class="pin-viesti"></div>
+
+                <!-- Napit: peruuta / vahvista pin -->
+                <div class="pin-modal-napit">
+                    <button id="pin-sulje"    class="btn terminal-btn">PERUUTA</button>
+                    <button id="pin-vahvista" class="btn terminal-btn terminal-btn--vahvista">VAHVISTA</button>
+                </div>
+            </div>
+        </div>
         
 
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
