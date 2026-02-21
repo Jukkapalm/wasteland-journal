@@ -12,12 +12,17 @@ setTimeout(() => {
 
 
 // Funktiot jotka suoritetaan kun sivu avautunut
+// Tämä tapahtuma käynnistyy kun sivu on latautunut kokonaan
+// Jos elementtejä yritettäisiin hakea aikaisemmin niin niitä ei ehkä olisi koska eivät ole vielä DOM:ssa
 document.addEventListener("DOMContentLoaded", function () {
 
+    // Päivälaskuri
     const katastrofista = new Date("2026-02-19");
+
     function updateDays() {
         const currentDate = new Date();
 
+        // Laskee päivien erotuksen
         const timeDifference = currentDate.getTime() - katastrofista.getTime();
         const daysPassed = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
 
@@ -30,11 +35,17 @@ document.addEventListener("DOMContentLoaded", function () {
     }
     updateDays();
 
+    // Käynnistetään järjestelmät
     sateilyArvo();
     alustaVirta();
     aktivoiIlmansuodatin();
     aktivoiLammitin();
     aktivoiJalostin();
+
+    // Käynnistetään päiväkirjan toiminnot
+    haePaivakirjaMerkinnat();
+    aktivoiTallennaBtn();
+    aktivoiPinModal();
 });
 
 
@@ -53,7 +64,268 @@ let polttoaine = 50;
 let lampotila = 18;
 
 
-// Arvotaan säteilynmäärä
+// Hakee päiväkirja merkinnät palvelimelta GET pyynnöllä
+function haePaivakirjaMerkinnat() {
+    const listaEl = document.getElementById("journal-entries");
+
+    // Näytetään latausviesti odottaessa
+    listaEl.innerHTML = `
+        <div class="journal-entry mb-3">
+            <div class="entry-meta">HAETAAN TIETOJA...</div>
+        </div>`;
+
+        // Tekee HTTP GET pyynnön
+        // Ilman lisäasetuksia oletuksena aina GET pyyntö
+        fetch("api/api.php")
+
+            .then(vastaus => {
+                if(!vastaus.ok) {
+                    throw new Error("Verkkovirhe: " + vastaus.status);
+                }
+                return vastaus.json();
+            })
+
+            .then(merkinnat => {
+                piirraMerkinnat(merkinnat);
+            })
+
+            // Virheet ketjussa palautuvat tänne
+            .catch(virhe => {
+                console.error("Merkintöjen haku epäonnistui:", virhe);
+                listaEl.innerHTML = `
+                    <div class="journal-entry mb-3">
+                        <div class="entry-meta">VIRHE</div>
+                        <p>Tietokantayhteys katkesi. Tiedostot vioittuneet.</p>
+                    </div>`;
+            });
+}
+
+
+// Rakentaa merkinnät HTML elementiksi
+function piirraMerkinnat(merkinnat) {
+    const listaEl = document.getElementById("journal-entries");
+
+    // Jos tietokannassa ei ole yhtään merkintää
+    if (!merkinnat || merkinnat.length === 0) {
+        listaEl.innerHTML = `
+            <div class="journal-entry mb-3">
+                <div class="entry-meta">EI MERKINTÖJÄ</div>
+                <p>Kirjoita ensimmäinen merkintäsi alle.</p>
+            </div>`;
+        return;
+    }
+
+    // Tyhjennetään lista ennen uudelleentäyttämistä
+    listaEl.innerHTML = "";
+
+    // forEach käy kaikki merkinnät läpi yksi kerrallaan
+    merkinnat.forEach(merkinta => {
+
+        // Muotoillaan tietokannan aika leima (tietokannan aikaleima on muodossa "yyyy-mm-dd xx:xx:xx")
+        const pvm = new Date(merkinta.created_at);
+        const klo = pvm.toLocaleTimeString("fi-FI", {
+            hour:   "2-digit",
+            minute: "2-digit"
+        });
+        const metaTeksti = `Päivä ${merkinta.day_number} - KLO ${klo}`;
+
+        // Luodaan uusi div Elementti päiväkirja merkinnöille ja lisätään CSS luokka
+        const merkintaDiv = document.createElement("div");
+        merkintaDiv.className = "journal-entry mb-3";
+
+        const metaDiv = document.createElement("div");
+        metaDiv.className   = "entry-meta";
+        metaDiv.textContent = metaTeksti;
+
+        const tekstiP = document.createElement("p");
+        tekstiP.textContent = merkinta.merkinta;
+
+        merkintaDiv.appendChild(metaDiv);
+        merkintaDiv.appendChild(tekstiP);
+
+        // Lisätään valmis merkintä elementti listaan
+        listaEl.appendChild(merkintaDiv);
+    });
+
+    // Vieritetään lista alkuun
+    listaEl.scrollTop = 0;
+}
+
+
+// Lähettää uuden merkinnän palvelimelle POST pyynnöllä
+function lahetaMerkinta(tekstiSisalto, pin, dayNumber) {
+    return fetch("api/api.php", {
+
+        // Kertoo että pyyntö on POST
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({pin: pin, merkinta: tekstiSisalto, day_number: dayNumber})
+    })
+    .then(vastaus => vastaus.json().then(data => ({ status: vastaus.status, data })));
+}
+
+
+// Lisää tallenna napille toiminnon, joka avaa pin modaalin
+function aktivoiTallennaBtn() {
+    const btn = document.getElementById("add-entry-btn");
+    const textarea = document.getElementById("new-entry-text");
+    const modal = document.getElementById("pin-modal");
+
+    if (!btn || !textarea || !modal) return;
+
+    btn.addEventListener("click", function () {
+
+        // Trim poistaa tyhjät välilyönnit alusta ja lopusta
+        const teksti = textarea.value.trim();
+
+        // Tarkistetaan ettei teksti kenttä ole tyhjä
+        if (!teksti) {
+            naytaKenttaViesti("Kirjoita ensin merkintä tekstikenttään.", "varoitus");
+            return; // Ei avata modalia tyhjällä tekstillä
+        }
+
+        // Tyhjennetään edellinen pin syöte ja mahdolliset virhe ilmoitukset
+        document.getElementById("pin-input").value    = "";
+        document.getElementById("pin-viesti").textContent = "";
+        document.getElementById("pin-viesti").className   = "pin-viesti";
+
+        // Avataan modal lisäämällä "active" CSS luokka
+        modal.classList.add("active");
+        document.getElementById("pin-input").focus(); // Viedään fokus PIN-kenttään
+    });
+}
+
+
+// Hallitsee koko pin modalin toimintalogiikan
+// Myös Entr näppäimen tuki
+// PIN:n lähetys palvelimelle ja vastauksen käsittely
+function aktivoiPinModal() {
+    const modal       = document.getElementById("pin-modal");
+    const suljeBtn    = document.getElementById("pin-sulje");
+    const vahvistaBtn = document.getElementById("pin-vahvista");
+    const pinInput    = document.getElementById("pin-input");
+    const pinViesti   = document.getElementById("pin-viesti");
+    const textarea    = document.getElementById("new-entry-text");
+
+    if (!modal) return;
+
+    // Sulje napilla
+    suljeBtn.addEventListener("click", function () {
+        modal.classList.remove("active"); // Poistetaan "active" -> modal piiloutuu
+    });
+
+    // Sulje klikkaamalla taustan päälle
+    // e.target = elementti jota klikattiin
+    // modal itse = tumma tausta-overlay
+    // Jos klikattiin taustan päälle (ei modalin sisältölaatikkoa), suljetaan
+    modal.addEventListener("click", function (e) {
+        if (e.target === modal) {
+            modal.classList.remove("active");
+        }
+    });
+
+    // Vahvista napilla
+    vahvistaBtn.addEventListener("click", function () {
+        lahetaModalista();
+    });
+
+    // Enter-näppäimellä
+    pinInput.addEventListener("keydown", function (e) {
+        if (e.key === "Enter") lahetaModalista();
+    });
+
+    // Sisäinen funktio: kerää tiedot ja lähettää
+    // Tämä funktio on "sulkeuman" (closure) sisällä:
+    // se pääsee käsiksi ylemmän funktion muuttujiin (modal, textarea jne.)
+    function lahetaModalista() {
+        const pin    = pinInput.value.trim();
+        const teksti = textarea.value.trim();
+
+        // Haetaan päiväluku näytöltä (parseInt muuntaa "0 Päivää" -> 0)
+        const paivaEl   = document.querySelector(".paiva");
+        const dayNumber = paivaEl ? parseInt(paivaEl.textContent) || 0 : 0;
+
+        if (!pin) {
+            naytaPinViesti("Anna PIN-koodi.", "varoitus");
+            return;
+        }
+
+        // Estetään useampi samanaikainen lähetys
+        // (käyttäjä ei voi klikata "Vahvista" uudelleen ennen kuin vastaus saapuu)
+        vahvistaBtn.disabled    = true;
+        vahvistaBtn.textContent = "LÄHETETÄÄN...";
+
+        // Kutsutaan lahetaMerkinta-funktiota ja ketjutetaan vastauksen käsittely
+        lahetaMerkinta(teksti, pin, dayNumber)
+
+            .then(({ status, data }) => {
+
+                if (status === 201 && data.ok) {
+                    modal.classList.remove("active"); // Suljetaan modal
+                    textarea.value = "";             // Tyhjennetään tekstikenttä
+                    haePaivakirjaMerkinnat();        // Päivitetään lista (uusi GET-pyyntö)
+
+                } else if (data.koodi === "VAARA_PIN") {
+
+                    // Väärä PIN
+                    // PHP palautti { virhe: "PÄÄSY EVÄTTY", koodi: "VAARA_PIN" }
+                    naytaPinViesti("⚠ PÄÄSY EVÄTTY - VÄÄRÄ PIN", "virhe");
+                    pinInput.value = ""; // Tyhjennetään PIN-kenttä uutta yritystä varten
+                    pinInput.focus();
+
+                } else {
+
+                    // Jokin muu palvelinvirhe
+                    naytaPinViesti("Virhe: " + (data.virhe || "Tuntematon virhe"), "virhe");
+                }
+            })
+
+            // .catch - verkkovirhe (palvelin ei vastaa, internet poikki jne.)
+            .catch(() => {
+                naytaPinViesti("Verkkovirhe. Tarkista yhteys.", "virhe");
+            })
+
+            // .finally suoritetaan AINA riippumatta onnistumisesta tai virheestä.
+            // Palautetaan nappi käyttöön joka tapauksessa.
+            .finally(() => {
+                vahvistaBtn.disabled    = false;
+                vahvistaBtn.textContent = "VAHVISTA";
+            });
+    }
+
+    // Näyttää viestin PIN-modalin sisällä
+    function naytaPinViesti(teksti, tyyppi) {
+        pinViesti.textContent = teksti;
+
+        // Asetetaan CSS-luokka joka määrittää värin (virhe=punainen, varoitus=oranssi)
+        pinViesti.className   = "pin-viesti pin-viesti--" + tyyppi;
+    }
+}
+
+
+// Näyttää väliaikaisen viestin tekstikentän vieressä
+function naytaKenttaViesti(teksti, tyyppi) {
+    const textarea = document.getElementById("new-entry-text");
+    let viesti = document.getElementById("kentta-viesti");
+
+    // Luodaan viesti-elementti jos sitä ei vielä ole
+    if (!viesti) {
+        viesti = document.createElement("div");
+        viesti.id = "kentta-viesti";
+
+        // insertBefore lisää elementin ennen tekstikenttää
+        textarea.parentNode.insertBefore(viesti, textarea);
+    }
+
+    viesti.textContent = teksti;
+    viesti.className   = "pin-viesti pin-viesti--" + tyyppi;
+
+    // setTimeout: poistetaan viesti automaattisesti 3 sekunnin jälkeen
+    setTimeout(() => { viesti.textContent = ""; }, 3000);
+}
+
+
+// Arvotaan säteilynmäärä ja asetetaan visuaaliset efektit
 function sateilyArvo() {
 
     const sateilyOpt = [
