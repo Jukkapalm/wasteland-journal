@@ -68,7 +68,6 @@ html, body {
     opacity: 0;
     display: flex;
     transition: opacity 1s ease-in;
-    z-index: 0;
     min-height: 100vh;
 }
 
@@ -651,4 +650,97 @@ html, body {
         0 0 20px #FFFF00,
         0 0 30px #FF0000;
     animation: warning-pulse 1.2s infinite;
+}
+
+
+/* PIN modaalin asetukset */
+.pin-modal-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.85);
+    z-index: 150;
+    justify-content: center;
+    align-items: center;
+}
+.pin-modal-overlay.active {
+    display: flex;
+}
+.pin-modal-box {
+    background: rgba(0, 20, 0, 0.95);
+    border: 2px solid #33FF00;
+    box-shadow: 0 0 30px rgba(51, 255, 0, 0.4);
+    padding: 2rem;
+    max-width: 400px;
+    width: 90%;
+    font-family: "Courier New", monospace;
+    text-align: center;
+}
+.pin-modal-otsikko {
+    color: #33FF00;
+    font-size: clamp(0.9rem, 2.5vw, 1.2rem);
+    letter-spacing: 2px;
+    margin-bottom: 2rem;
+    text-shadow: 0 0 5px #33FF00;
+}
+/* Ohjeteksti */
+.pin-modal-ohje {
+    color: #33FF00;
+    font-size: 0.8rem;
+    opacity: 0.7;          
+    margin-bottom: 1.5rem;
+}
+.pin-input {
+    background: rgba(0, 0, 0, 0.8); 
+    border: 1px solid #33FF00;
+    color: #33FF00;              
+    font-family: "Courier New", monospace;
+
+    font-size: 1.5rem;  
+    letter-spacing: 8px; 
+    text-align: center;
+
+    width: 100%;
+    padding: 0.5rem;
+    margin-bottom: 1rem;
+    outline: none;
+}
+.pin-input:focus {
+    box-shadow: 0 0 10px #33FF00;
+    border-color: #33FF00;
+}
+.pin-viesti {
+    min-height: 1.5rem;
+    font-size: 0.85rem;
+    margin-bottom: 1rem;
+    font-family: "Courier New", monospace;
+    font-weight: bold;
+}
+.pin-viesti--virhe {
+    color: #FF0000;
+    text-shadow: 0 0 5px #FF0000; 
+
+    animation: warning-pulse 0.5s ease;
+}
+.pin-viesti--varoitus {
+    color: #FFA500;
+    text-shadow: 0 0 5px #FFA500;
+}
+.pin-modal-napit {
+    display: flex;     
+    gap: 1rem;          
+    justify-content: center;
+}
+.terminal-btn--vahvista {
+    border: 1px solid #33FF00 !important;
+}
+.terminal-btn--vahvista:hover {
+    background-color: rgba(51, 255, 0, 0.2) !important;
+}
+.terminal-btn:disabled {
+    opacity: 0.5;      
+    cursor: not-allowed; 
 }
