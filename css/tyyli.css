@@ -23,7 +23,7 @@ html, body {
 
 
 /* Intron taustakuvan asetukset */
-.intro-background-overlay {
+/*.intro-background-overlay {
     position: fixed;
     top: 0;
     left: 0;
@@ -32,7 +32,7 @@ html, body {
     background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url("../images/taustakuva.jpg");
     background-size: cover;
     background-position: center;
-}
+}*/
 
 
 /* Intron tekstin container */
@@ -130,6 +130,7 @@ html, body {
     font-size: 1rem;
     font-weight: 900;
     opacity: 0.7;
+    letter-spacing: 2px;
 }
 
 
