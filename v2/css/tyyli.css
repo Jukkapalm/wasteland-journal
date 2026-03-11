@@ -1,0 +1,715 @@
+/* CSS muuttujat - väripaletti ja fontit */
+:root {
+    /* Taustat */
+    --bg: #0A0800;
+    --panel-bg: #0D0A00;
+    --panel-border: #5A3E0A;
+
+    /* Amber värit */
+    --amber: #D4922A;
+    --amber-bright: #F0B94A;
+    --amber-dim: rgba(212, 146, 42, 0.12);
+    --amber-glow: rgba(212, 146, 42, 0.35);
+
+    /* Teksti */
+    --text: #C8871F;
+    --text-bright: #F0B94A;
+    --muted: #6B5520;
+
+    /* Tilavärit */
+    --red: #CC3300;
+    --red-dim: rgba(204, 51, 0, 0.15);
+    --green: #7ABF00;
+    --green-dim: rgba(122, 191, 0, 0.15);
+    --blue: #00BFFF;
+
+    /* Fontit */
+    --font-mono: 'Share Tech Mono', 'Courier New', monospace;
+    --font-hand: 'Special Elite', monospace;
+    --font-marker: 'Permanent Marker', cursive;
+}
+
+/* Hätävalaistustila - vaihdetaan JS:llä kun akut kriittisellä tasolla */
+body.emergency-light {
+    --amber: #CC2200;
+    --amber-bright: #FF3311;
+    --amber-dim: rgba(204, 34, 0, 0.12);
+    --amber-glow: rgba(204, 34, 0, 0.35);
+    --text: #BB2200;
+    --text-bright: #FF3311;
+    --panel-border: #662200;
+}
+
+/* Pohja */
+*, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+html, body {
+    width: 100%;
+    min-height: 100vh;
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font-mono);
+    overflow-x: hidden;
+    font-size: 18px;
+}
+
+/* Vignette - reunoille */
+body::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background: radial-gradient(ellipse at center, transparent 60%, rgba(0, 0, 0, 0.65) 100%);
+    pointer-events: none;
+    z-index: 1;
+}
+
+/* CRT scanlines */
+.crt-overlay {
+    position: fixed;
+    inset: 0;
+    background: repeating-linear-gradient(
+        0deg,
+        transparent,
+        transparent 2px,
+        rgba(0, 0, 0, 0.07) 2px,
+        rgba(0, 0, 0, 0.07) 4px
+    );
+    pointer-events: none;
+    z-index: 500;
+}
+
+/* Intro */
+.intro {
+    position: fixed;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--bg);
+    z-index: 400;
+    opacity: 1;
+    transition: opacity 1s ease-out;
+}
+.intro.poistu {
+    opacity: 0;
+    pointer-events: none;
+}
+.intro-text {
+    text-align: center;
+    font-family: var(--font-hand);
+    font-size: clamp(2.5rem, 8vw, 7rem);
+    color: var(--amber-bright);
+    text-shadow: 0 0 20px var(--amber-glow), 0 0 50px rgba(212, 146, 42, 0.2);
+    opacity: 0;
+    animation: reveal-text 2.5s ease forwards;
+}
+@keyframes reveal-text {
+    0% { opacity: 0; letter-spacing: 0.5rem; }
+    40% { opacity: 0; }
+    100% { opacity: 1; letter-spacing: 0.08rem; }
+}
+
+/* Post-it lappu */
+.sticky-note {
+    position: fixed;
+    top: 14px;
+    right: 20px;
+    width: 200px;
+    padding: 14px 16px 18px;
+    background: #F5E96A;
+    border-top: 5px solid #E8D840;
+    box-shadow: 3px 5px 14px rgba(0, 0, 0, 0.55);
+    transform: rotate(1.8deg);
+    z-index: 550;
+    opacity: 0;
+    transition: opacity 0.5s ease;
+}
+.sticky-note.nakyva { opacity: 1; }
+
+/* Teippi */
+.sticky-note::before {
+    content: '';
+    position: absolute;
+    top: -14px;
+    left: 50%;
+    transform: translateX(-50%) rotate(-1deg);
+    width: 55%;
+    height: 24px;
+    background: rgba(255, 255, 255, 0.45);
+    backdrop-filter: blur(1px);
+}
+
+#postit-teksti {
+    font-family: var(--font-hand);
+    font-size: 0.78rem;
+    color: #2A1A00;
+    line-height: 1.55;
+    margin-bottom: 6px;
+    opacity: 0.8;
+}
+#signature {
+    font-family: var(--font-marker);
+    font-size: 1rem;
+    color: #CC1100;
+    opacity: 0.85;
+    letter-spacing: 1px;
+}
+
+/* Järjestelmähälytys - random viestit */
+.system-alert {
+    position: fixed;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%) translateY(-100%);
+    background: rgba(10, 8, 0, 0.95);
+    border: 1px solid var(--amber);
+    border-top: none;
+    padding: 8px 24px;
+    font-size: 0.72rem;
+    color: var(--amber-bright);
+    letter-spacing: 0.15em;
+    z-index: 350;
+    transition: transform 0.4s ease;
+    white-space: nowrap;
+}
+.system-alert.nakyva {
+    transform: translateX(-50%) translateY(0);
+}
+
+/* Pääsisältö */
+.main-content {
+    position: relative;
+    z-index: 2;
+    opacity: 0;
+    padding-top: 1.5rem;
+    transition: opacity 0.8s ease;
+}
+.main-content.nakyva { opacity: 1; }
+
+/* Otsikko */
+.terminal-title {
+    text-align: center;
+    font-family: var(--font-mono);
+    font-size: clamp(1rem, 3vw, 1.8rem);
+    color: var(--amber-bright);
+    letter-spacing: 0.25em;
+    text-shadow: 0 0 15px var(--amber-glow), 0 0 35px rgba(212, 146, 42, 0.12);
+    margin-bottom: 1.5rem;
+}
+
+/* Glitch efekti otsikkoon - JS lisää ja poistaa luokan */
+@keyframes glitch-shake {
+    0%, 100% { transform: translateX(0)  skewX(0deg);    filter: none; }
+    20% { transform: translateX(-3px) skewX(-1deg); filter: hue-rotate(25deg) brightness(1.3); }
+    40% { transform: translateX(3px)  skewX(0.5deg); }
+    60% { transform: translateX(-1px) skewX(0deg);  filter: brightness(1.1); }
+    80% { transform: translateX(1px); filter: none; }
+}
+.terminal-title.glitch {
+    animation: glitch-shake 0.15s steps(1) forwards;
+}
+
+/* Paneelit */
+.panel {
+    background: var(--panel-bg);
+    border: 1px solid var(--panel-border);
+    padding: 1.1rem 1.2rem;
+    box-shadow:
+        inset 0 0 40px rgba(0, 0, 0, 0.4),
+        0 0 20px rgba(212, 146, 42, 0.04);
+}
+
+.panel-title {
+    font-size: 0.8rem;
+    color: var(--amber-bright);
+    letter-spacing: 0.2em;
+    border-bottom: 1px solid var(--panel-border);
+    padding-bottom: 0.5rem;
+    margin-bottom: 0.9rem;
+    text-shadow: 0 0 8px var(--amber-glow);
+}
+
+.panel-hr {
+    border: none;
+    border-top: 1px solid var(--muted);
+    opacity: 0.4;
+    margin: 0.7rem 0;
+}
+
+.stat-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.72rem;
+    margin-bottom: 0.5rem;
+    gap: 0.5rem;
+}
+.stat-label { color: var(--muted); letter-spacing: 0.08em; }
+.stat-value { color: var(--amber-bright); letter-spacing: 0.06em; }
+
+/* ASCII progress barit */
+.bar-wrap { margin-bottom: 0.7rem; }
+.bar-label {
+    font-size: 0.65rem;
+    color: var(--muted);
+    letter-spacing: 0.1em;
+    margin-bottom: 2px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+.ascii-bar-container {
+    display: flex;
+    align-items: center;
+    gap: 0;
+}
+
+/* JS rakentaa barin täytettyinä ja tyhjinä lohkoina */
+.ascii-bar {
+    font-size: 0.75rem;
+    letter-spacing: 0.02em;
+    line-height: 1;
+}
+.ascii-bar .fill { color: var(--amber-bright); }
+.ascii-bar .empty { color: var(--muted); }
+.ascii-pct {
+    font-size: 0.62rem;
+    color: var(--muted);
+    margin-left: 6px;
+    white-space: nowrap;
+    min-width: 36px;
+}
+
+/* Värikoodit barin täyttöosalle tilanteen mukaan */
+.ascii-bar.bar-ok .fill { color: var(--amber-bright); }
+.ascii-bar.bar-warning .fill { color: #D4922A; }
+.ascii-bar.bar-danger .fill { color: var(--red); }
+.ascii-bar.bar-hot .fill { color: var(--red); }
+
+.ascii-pct.pct-ok { color: var(--amber); }
+.ascii-pct.pct-warning { color: #D4922A; }
+.ascii-pct.pct-danger { color: var(--red); }
+
+/* Status badge */
+.status-badge {
+    font-size: 0.58rem;
+    padding: 1px 7px;
+    border-radius: 2px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+}
+
+.badge-ok { background: var(--green-dim);  color: var(--green); border: 1px solid var(--green); }
+.badge-warning { background: rgba(212,146,42,0.15); color: var(--amber-bright); border: 1px solid var(--amber); }
+.badge-danger { background: var(--red-dim);    color: var(--red);   border: 1px solid var(--red); }
+
+/* Laite kytkimet */
+.device-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.72rem;
+    margin-bottom: 0.45rem;
+}
+.device-label { color: var(--muted); letter-spacing: 0.06em; }
+.device-status {
+    cursor: pointer;
+    letter-spacing: 0.08em;
+    font-size: 0.72rem;
+    transition: color 0.2s;
+    user-select: none;
+}
+.device-status.on {
+    color: var(--amber-bright);
+    text-shadow: 0 0 6px var(--amber-glow);
+    animation: status-blink 2.5s infinite;
+}
+.device-status.off { color: var(--muted); }
+.device-status.starting { color: var(--amber); }
+.device-status.disabled { color: var(--muted); opacity: 0.4; cursor: not-allowed; }
+
+@keyframes status-blink {
+    0%, 88%, 100% { opacity: 1; }
+    92%           { opacity: 0.35; }
+}
+
+/* Lämpötila */
+.temp-display {
+    text-align: center;
+    font-size: 0.7rem;
+    color: var(--amber);
+    letter-spacing: 0.15em;
+    margin-top: 0.8rem;
+    padding-top: 0.6rem;
+    border-top: 1px solid var(--muted);
+    opacity: 0.4;
+}
+
+/* Väri muuttuu JS:llä lämpötilan mukaan */
+.temp-display.temp-ok { color: var(--amber); opacity: 0.85; }
+.temp-display.temp-cold { color: #FFA500; opacity: 1; }
+.temp-display.temp-critical { color: var(--blue); opacity: 1; }
+
+/* Päiväkirja */
+.journal-entries {
+    flex: 1;
+    overflow-y: auto;
+    max-height: 340px;
+    padding-right: 4px;
+    margin-bottom: 0.5rem;
+    scrollbar-width: thin;
+    scrollbar-color: var(--muted) transparent;
+}
+
+.journal-entries::-webkit-scrollbar { width: 4px; }
+.journal-entries::-webkit-scrollbar-track { background: transparent; }
+.journal-entries::-webkit-scrollbar-thumb { background: var(--muted); border-radius: 2px; }
+
+.journal-entry {
+    border-left: 2px solid var(--panel-border);
+    padding: 0.45rem 0.8rem;
+    margin-bottom: 0.6rem;
+    background: rgba(212, 146, 42, 0.03);
+    transition: border-color 0.2s;
+}
+.journal-entry:hover { border-left-color: var(--amber); }
+
+.entry-meta {
+    font-size: 0.6rem;
+    color: var(--muted);
+    letter-spacing: 0.12em;
+    margin-bottom: 3px;
+}
+.entry-text {
+    font-family: var(--font-hand);
+    font-size: 0.82rem;
+    color: var(--text);
+    line-height: 1.6;
+}
+
+/* Syöttöalue */
+.input-area { margin-top: 0.5rem; }
+
+.input-label {
+    display: block;
+    font-size: 0.68rem;
+    color: var(--amber);
+    letter-spacing: 0.1em;
+    margin-bottom: 0.4rem;
+}
+
+.terminal-input {
+    width: 100%;
+    background: rgba(212, 146, 42, 0.04);
+    border: 1px solid var(--muted);
+    color: var(--text-bright);
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    padding: 0.5rem 0.7rem;
+    resize: none;
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+.terminal-input:focus {
+    border-color: var(--amber);
+    box-shadow: 0 0 8px rgba(212, 146, 42, 0.2);
+}
+.terminal-input::placeholder { color: var(--muted); opacity: 0.6; }
+
+.terminal-btn {
+    display: inline-block;
+    background: transparent;
+    border: 1px solid var(--amber);
+    color: var(--amber);
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    letter-spacing: 0.1em;
+    padding: 6px 16px;
+    cursor: pointer;
+    transition: background 0.2s, color 0.2s, box-shadow 0.2s;
+}
+.terminal-btn:hover {
+    background: var(--amber-dim);
+    color: var(--amber-bright);
+    box-shadow: 0 0 10px rgba(212, 146, 42, 0.2);
+}
+.terminal-btn:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+.terminal-btn-confirm {
+    border-color: var(--amber-bright);
+    color: var(--amber-bright);
+}
+
+/* Tapahtumaloki */
+.event-log {
+    max-height: 110px;
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: var(--muted) transparent;
+}
+
+.event-log::-webkit-scrollbar { width: 4px; }
+.event-log::-webkit-scrollbar-track { background: transparent; }
+.event-log::-webkit-scrollbar-thumb { background: var(--muted); border-radius: 2px; }
+
+.log-entry {
+    font-size: 0.67rem;
+    line-height: 1.75;
+    letter-spacing: 0.04em;
+    border-bottom: 1px solid rgba(90, 62, 10, 0.2);
+    padding: 1px 0;
+}
+
+.log-entry .log-time { color: var(--muted); margin-right: 8px; }
+.log-entry .log-msg { color: var(--text); }
+.log-entry.log-warn .log-msg { color: var(--amber); }
+.log-entry.log-danger .log-msg { color: var(--red); }
+.log-entry.log-ok .log-msg { color: var(--green); }
+
+/* Virransäästötila */
+.power-saving-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.96);
+    z-index: 200;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 1s ease;
+}
+.power-saving-overlay.aktiivinen {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.power-saving-content {
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.5rem;
+}
+
+.power-saving-text {
+    font-family: var(--font-mono);
+    font-size: clamp(1.2rem, 4vw, 2.5rem);
+    color: var(--red);
+    letter-spacing: 6px;
+    text-shadow: 0 0 15px var(--red), 0 0 30px rgba(204, 51, 0, 0.4);
+    animation: power-blink 1.8s infinite;
+}
+
+@keyframes power-blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.25; }
+}
+
+/* Hätäkäynnistys nappi */
+.emergency-btn {
+    background: transparent;
+    border: 2px solid var(--red);
+    color: var(--red);
+    font-family: var(--font-mono);
+    font-size: clamp(0.8rem, 2vw, 1rem);
+    letter-spacing: 0.15em;
+    padding: 10px 28px;
+    cursor: pointer;
+    text-shadow: 0 0 8px var(--red);
+    box-shadow: 0 0 20px rgba(204, 51, 0, 0.2);
+    transition: background 0.2s, box-shadow 0.2s;
+    animation: emergency-pulse 2s infinite;
+}
+.emergency-btn:hover {
+    background: var(--red-dim);
+    box-shadow: 0 0 30px rgba(204, 51, 0, 0.4);
+}
+.emergency-btn:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+    animation: none;
+}
+@keyframes emergency-pulse {
+    0%, 100% { box-shadow: 0 0 20px rgba(204, 51, 0, 0.2); }
+    50% { box-shadow: 0 0 35px rgba(204, 51, 0, 0.5); }
+}
+
+.emergency-info {
+    font-size: 0.65rem;
+    color: var(--muted);
+    letter-spacing: 0.12em;
+}
+
+/* Huurtuminen */
+.frost-overlay {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 150;
+    opacity: 0;
+    backdrop-filter: blur(0px);
+    background:
+        radial-gradient(circle at 15% 25%, rgba(200, 220, 255, 0.08) 0%, transparent 55%),
+        radial-gradient(circle at 85% 65%, rgba(200, 220, 255, 0.07) 0%, transparent 55%),
+        radial-gradient(circle at 45% 80%, rgba(200, 220, 255, 0.10) 0%, transparent 50%),
+        linear-gradient(180deg, rgba(180, 200, 230, 0.04) 0%, rgba(200, 220, 255, 0.12) 100%);
+    transition: opacity 2s ease, backdrop-filter 2s ease;
+}
+.frost-overlay.frost-light  {
+    opacity: 0.35;
+    backdrop-filter: blur(1px);
+}
+.frost-overlay.frost-medium {
+    opacity: 0.65;
+    backdrop-filter: blur(3.5px);
+}
+.frost-overlay.frost-heavy  {
+    opacity: 0.88;
+    backdrop-filter: blur(10px);
+}
+
+/* Kylmyysvaroitus */
+.warning-overlay {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    z-index: 160;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 1s ease;
+}
+.warning-overlay.nakyva { opacity: 1; }
+
+.warning-icon {
+    font-size: clamp(2.5rem, 7vw, 5rem);
+    color: var(--blue);
+    text-shadow: 0 0 20px var(--blue), 0 0 40px var(--blue);
+    animation: warning-pulse 1.5s infinite;
+}
+.warning-text {
+    color: var(--blue);
+    font-family: var(--font-mono);
+    font-size: clamp(0.85rem, 2.5vw, 1.6rem);
+    font-weight: bold;
+    letter-spacing: 3px;
+    line-height: 1.6;
+    text-shadow: 0 0 10px var(--blue), 0 0 20px var(--blue);
+    animation: warning-pulse 1.5s infinite;
+}
+@keyframes warning-pulse {
+    0%, 100% { opacity: 1;   transform: scale(1); }
+    50%       { opacity: 0.5; transform: scale(1.04); }
+}
+
+/* PIN modal */
+.modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.88);
+    z-index: 600;
+    align-items: center;
+    justify-content: center;
+}
+.modal-overlay.active { display: flex; }
+
+.modal-box {
+    background: var(--panel-bg);
+    border: 1px solid var(--amber);
+    box-shadow: 0 0 40px rgba(212, 146, 42, 0.2);
+    padding: 2rem;
+    max-width: 380px;
+    width: 90%;
+    text-align: center;
+}
+.modal-title {
+    font-family: var(--font-mono);
+    font-size: clamp(0.8rem, 2.2vw, 1rem);
+    color: var(--amber-bright);
+    letter-spacing: 0.12em;
+    margin-bottom: 1.2rem;
+    text-shadow: 0 0 8px var(--amber-glow);
+}
+.modal-info {
+    font-size: 0.75rem;
+    color: var(--muted);
+    margin-bottom: 1.2rem;
+    letter-spacing: 0.06em;
+}
+.pin-input {
+    width: 100%;
+    background: rgba(0, 0, 0, 0.6);
+    border: 1px solid var(--amber);
+    color: var(--amber-bright);
+    font-family: var(--font-mono);
+    font-size: 1.4rem;
+    letter-spacing: 10px;
+    text-align: center;
+    padding: 0.5rem;
+    margin-bottom: 0.8rem;
+    outline: none;
+    transition: box-shadow 0.2s;
+}
+.pin-input:focus { box-shadow: 0 0 12px rgba(212, 146, 42, 0.3); }
+
+.pin-viesti {
+    min-height: 1.4rem;
+    font-size: 0.78rem;
+    margin-bottom: 1rem;
+    letter-spacing: 0.06em;
+}
+
+.pin-viesti--virhe { color: var(--red);   text-shadow: 0 0 5px var(--red); }
+.pin-viesti--varoitus { color: var(--amber); }
+
+.modal-buttons {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+}
+
+/* Hätäkäynnistys glitch efekti */
+@keyframes boot-glitch {
+    0% { opacity: 0; transform: translateX(-4px) skewX(-2deg); filter: brightness(2); }
+    15% { opacity: 1; transform: translateX(4px)  skewX(1deg);  filter: brightness(1.5); }
+    30% { opacity: 0; transform: translateX(-2px); filter: brightness(2); }
+    45% { opacity: 1; transform: translateX(2px);  filter: brightness(1.3); }
+    60% { opacity: 0; }
+    75% { opacity: 1; transform: translateX(0) skewX(0); filter: brightness(1.1); }
+    100% { opacity: 1; transform: translateX(0) skewX(0); filter: none; }
+}
+.main-content.boot-glitch {
+    animation: boot-glitch 0.5s steps(2) forwards;
+}
+
+/* Globaali scrollbar */
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: var(--muted); border-radius: 2px; }
+
+/* Responsiivisuus */
+@media (max-width: 767px) {
+    .sticky-note {
+        display: none;
+    }
+    .panel { padding: 0.9rem 1rem; }
+    .journal-entries { max-height: 220px; }
+    .event-log { max-height: 80px; }
+}
+@media (max-width: 600px) {
+    .intro-text {
+        white-space: normal;
+        clip-path: none;
+        opacity: 0;
+        animation: reveal-text 2.5s ease forwards;
+    }
+}

@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="fi">
+    <head>
+        <!-- Sivun perusasetukset -->
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Wasteland Journal</title>
+
+        <!-- Bootstrap -->
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+        <!-- Fontit -->
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=Special+Elite&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=Permanent+Marker&display=swap" rel="stylesheet">
+
+        <!-- Oma CSS -->
+        <link rel="stylesheet" href="css/tyyli.css">
+        
+    </head>
+    <body>
+        
+        <!-- CRT scanlines - kiinteä overlay koko näytölle -->
+        <div class="crt-overlay"></div>
+
+        <!-- Intro teksti - javascript häivyttää tämän ja tuo päänäkymän esiin -->
+        <div id="intro" class="intro">
+            <h1 class="intro-text">Wasteland Journal</h1>
+        </div>
+
+        <!-- Post-it lappu - kiinteä, näkyy aina päänäkymässä -->
+         <div class="sticky-note" id="sticky-note">
+            <p id="postit-teksti">Tilanne hallinnassa.<br>Apua tulossa pian.</p>
+            <span id="signature">Ei tule!</span>
+         </div>
+
+         <!-- Random järjestelmähälytykset - javascript hoitaa -->
+         <div id="system-alert" class="system-alert"></div>
+
+         <!-- Virransäästötila - peittää kaiken kun virta 0 -->
+         <div id="power-saving-overlay" class="power-saving-overlay">
+            <div class="power-saving-content">
+                <div class="power-saving-text">POWER SAVING MODE</div>
+
+                <!-- Hätäkäynnistys - toimii ainoastaan virransäästötilassa -->
+                <button id="emergency-btn" class="emergency-btn">⚡ HÄTÄKÄYNNISTYS</button>
+                <div class="emergency-info">VARAVIRTA: RAJOITETTU - TOIMI NOPEASTI</div>
+            </div>
+         </div>
+
+         <!-- Huurtuminen - tulee näkyviin kun sisälämpötila alhainen -->
+         <div id="frost-overlay" class="frost-overlay"></div>
+
+         <!-- Kylmyysvaroitus -->
+         <div id="cold-warning" class="warning-overlay">
+            <div class="warning-icon">⚠</div>
+            <div class="warning-text">KÄYNNISTÄ LÄMMITIN<br>LÄMPÖTILA ALHAINEN</div>
+         </div>
+
+         <!-- Pääsisältö - aluksi piilotettu, javascript hoitaa esiin intron jälkeen -->
+         <main id="main-content" class="main-content">
+            <div class="container-fluid px-3 px-md-4">
+
+                <!-- Otsikko -->
+                <h1 class="terminal-title" id="terminal-title">BUNKER TERMINAL v.1.3.7</h1>
+
+                <!-- Ylärivin paneelit: status monitor + päiväkirja -->
+                <div class="row g-3 mb-3">
+
+                    <!-- Ylärivin vasen paneeli: status monitor -->
+                    <div class="col-12 col-md-5">
+                        <div class="panel h-100">
+                            <div class="panel-title">STATUS_MONITOR</div>
+
+                            <!-- Päivälaskuri -->
+                            <div class="stat-row">
+                                <span class="stat-label">KATASTROFISTA:</span>
+                                <span class="stat-value paiva">0 PÄIVÄÄ</span>
+                            </div>
+
+                            <!-- Sää -->
+                            <div class="stat-row">
+                                <span class="stat-label">SÄÄOLOSUHTEET:</span>
+                                <span class="stat-value" id="weather-status">KUIVA</span>
+                            </div>
+
+                            <!-- Ulkolämpötila -->
+                            <div class="stat-row">
+                                <span class="stat-label">ULKOLÄMPÖTILA:</span>
+                                <span class="stat-value" id="outside-temp">-12°C</span>
+                            </div>
+
+                            <hr class="panel-hr">
+
+                            <!-- Säteilytaso -->
+                            <div class="bar-wrap">
+                                <div class="bar-label">SÄTEILYTASO<span id="radiation-badge" class="status-badge"></span></div>
+                                <div class="ascii-bar-container">
+                                    <span id="radiation-bar" class="ascii-bar"></span>
+                                    <span id="radiation-pct" class="ascii-pct"></span>
+                                </div>
+                            </div>
+
+                            <!-- Polttoaine -->
+                            <div class="bar-wrap">
+                                <div class="bar-label">GENERAATTORIN POLTTOAINE</div>
+                                <div class="ascii-bar-container">
+                                    <span id="fuel-bar" class="ascii-bar"></span>
+                                    <span id="fuel-pct" class="ascii-pct"></span>
+                                </div>
+                            </div>
+
+                            <!-- Akkuvirta -->
+                            <div class="bar-wrap">
+                                <div class="bar-label">AKKUVIRTA</div>
+                                <div class="ascii-bar-container">
+                                    <span id="power-bar" class="ascii-bar"></span>
+                                    <span id="power-pct" class="ascii-pct"></span>
+                                </div>
+                            </div>
+
+                            <!-- Vesivarasto -->
+                            <div class="bar-wrap">
+                                <div class="bar-label">VESIVARASTO</div>
+                                <div class="ascii-bar-container">
+                                    <span id="water-bar" class="ascii-bar"></span>
+                                    <span id="water-pct" class="ascii-pct"></span>
+                                </div>
+                            </div>
+
+                            <!-- Generaattorin jäähdytyslämpö -->
+                            <div class="bar-wrap">
+                                <div class="bar-label">GENERAATTORIN LÄMPÖTILA</div>
+                                <div class="ascii-bar-container">
+                                    <span id="coolant-bar" class="ascii-bar"></span>
+                                    <span id="coolant-pct" class="ascii-pct"></span>
+                                </div>
+                            </div>
+
+                            <hr class="panel-hr">
+
+                            <!-- Laitteet -->
+                            <div class="device-row">
+                                <span class="device-label">GENERAATTORI</span>
+                                <span id="generator-status" class="device-status off">[ POIS ]</span>
+                            </div>
+                            <div class="device-row">
+                                <span class="device-label">JÄÄHDYTIN</span>
+                                <span id="coolant-status" class="device-status off">[ POIS ]</span>
+                            </div>
+                            <div class="device-row">
+                                <span class="device-label">LÄMMITIN</span>
+                                <span id="heater-status" class="device-status off">[ POIS ]</span>
+                            </div>
+                            <div class="device-row">
+                                <span class="device-label">POLTTOAINEEN JALOSTUS</span>
+                                <span id="refinery-status" class="device-status off">[ POIS ]</span>
+                            </div>
+
+                            <!-- Sisälämpötila -->
+                            <div class="temp-display" id="temp-display">SISÄLÄMPÖTILA: +18°C</div>
+                        </div>
+                    </div>
+
+                    <!-- Ylärivin oikea paneeli: päiväkirja  -->
+                    <div class="col-12 col-md-7">
+                        <div class="panel h-100 d-flex flex-column">
+                            <div class="panel-title">PÄIVÄKIRJA</div>
+
+                            <div id="journal-entries" class="journal-entries"></div>
+
+                            <hr class="panel-hr">
+
+                            <!-- Uusi merkintä -->
+                            <div class="input-area">
+                                <label class="input-label">>&gt; UUSI MERKINTÄ</label>
+
+                                <textarea id="new-entry-text" class="terminal-input" rows="2" placeholder="Kirjoita uusi merkintä..."></textarea>
+                                <button id="add-entry-btn" class="terminal-btn mt-2">TALLENNA TIEDOSTO</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Alarivi: Tapahtumaloki -->
+                <div class="row g-3 mb-4">
+                    <div class="col-12">
+                        <div class="panel">
+                            <div class="panel-title">TAPAHTUMALOKI</div>
+                            <div id="event-log" class="event-log"></div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+         </main>
+
+         <!-- PIN modal - tunnistautuminen päiväkirjamerkinnän tallennukseen -->
+         <div id="pin-modal" class="modal-overlay">
+            <div class="modal-box">
+                <h3 class="modal-title">&#128274; TUNNISTAUTUMINEN VAADITAAN</h3>
+                <p class="modal-info">Anna PIN-koodi tallentaaksesi merkinnän.</p>
+                <input type="password" id="pin-input" class="pin-input", maxlength="10" placeholder="____" autocomplete="off"/>
+                <div id="pin-viesti" class="pin-viesti"></div>
+                <div class="modal-buttons">
+                    <button id="pin-sulje" class="terminal-btn">PERUUTA</button>
+                    <button id="pin-vahvista" class="terminal-btn terminal-btn-confirm">VAHVISTA</button>
+                </div>
+            </div>
+         </div>
+
+         <!-- Bootstrap JS -->
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+        <script src="js/main.js"></script>
+
+    </body>
+</html>
